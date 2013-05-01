@@ -23,7 +23,7 @@ public class ExcelExporter {
 
     public void exportMapsToExcel(Map<Date, Integer> urlStatistics, Map<Date, Integer> generalStatistics, Map<Date, Integer> exportStatistics)
         throws IOException, WriteException {
-        File file = new File("c://result2.xls");
+        File file = new File("e://downloads//result2.xls");
 
         WorkbookSettings wbSettings = new WorkbookSettings();
         wbSettings.setLocale(new Locale("en", "EN"));

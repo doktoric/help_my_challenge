@@ -8,16 +8,18 @@ public class Job {
     private String id;
     private String queueType;
     private double runtimeInSeconds;
+    private String jobOutput;
 
     public Job() {
     }
 
-    public Job(Date dateTime, String dateString, String id, String queueType, double runtimeInSeconds) {
+    public Job(Date dateTime, String dateString, String id, String queueType, double runtimeInSeconds, String jobOutput) {
         super();
         this.dateTime = dateTime;
         this.id = id;
         this.queueType = queueType;
         this.runtimeInSeconds = runtimeInSeconds;
+        this.jobOutput = jobOutput;
     }
 
     @Override
@@ -56,5 +58,12 @@ public class Job {
     public void setRuntimeInSeconds(double runtimeInSeconds) {
         this.runtimeInSeconds = runtimeInSeconds;
     }
-
+    
+    public String getJobOutput() {
+		return jobOutput;
+	}
+    
+    public void setJobOutput(String jobOutput) {
+		this.jobOutput = jobOutput;
+	}
 }
