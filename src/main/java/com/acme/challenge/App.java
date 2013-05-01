@@ -17,7 +17,7 @@ public class App {
 	public static void main(String[] args) {
 		SimulatedMachineManager machineManager = new SimulatedMachineManager();
 		LogParser parser = new LogParser(machineManager);
-		parser.start("e:\\prj\\python\\scale-contest-evaluator-master\\week_1.log");
+		parser.start("d:\\projects\\prezi\\week_1.log");
 //		new ExcelExporter().exportMapsToExcel(
 //				machineManager.getUrlStatistics(),
 //				machineManager.getGeneralStatistics(),
