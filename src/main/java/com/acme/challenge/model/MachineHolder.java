@@ -21,8 +21,8 @@ import com.acme.challenge.UsageStatistics;
 public class MachineHolder {
 
 	private QueueType type;
-	private List<SimulatedMachine> QMachines = new ArrayList<SimulatedMachine>();
-	private PriorityQueue<UsageStatistics> StatsQueue = new PriorityQueue<>();
+	private List<SimulatedMachine> machines = new ArrayList<SimulatedMachine>();
+	private PriorityQueue<UsageStatistics> statsQueue = new PriorityQueue<>();
 	private Integer launchedVMs = 0;
 
 	public MachineHolder(QueueType type) {
@@ -39,59 +39,62 @@ public class MachineHolder {
 	}
 
 	public void addSimulatedMachine(SimulatedMachine machine) {
-		QMachines.add(machine);
+		machines.add(machine);
 	}
 
 	private Integer getBusyMachines(Date now) {
-		Integer ret = 0;
-		for (SimulatedMachine machine : QMachines) {
+		Integer busyCount = 0;
+		for (SimulatedMachine machine : machines) {
 			if (machine.isBusy(now)) {
-				ret++;
+				busyCount++;
 			}
 		}
-		return ret;
+		return busyCount;
 	}
 
 	public void updateStatisticQue(Date now) {
-		StatsQueue.add(new UsageStatistics(now, getBusyMachines(now)));
-		if (StatsQueue.size() > MAX_QUEUE_SIZE) {
-			StatsQueue.poll();
+		Integer busyCount=getBusyMachines(now);
+		UsageStatistics usageStatistics=new UsageStatistics(now, busyCount);
+		statsQueue.add(usageStatistics);
+		if (statsQueue.size() > MAX_QUEUE_SIZE) {
+			statsQueue.poll();
 		}
 	}
 
 	public void processStatisticsQueue(Date now) {
-		int sum = 0;
+		//int sum = 0;
 		int max = 0;
-		for (UsageStatistics stat : StatsQueue) {
-			sum += stat.getUsedVMs();
+		for (UsageStatistics stat : statsQueue) {
+			//sum += stat.getUsedVMs();
 			if (stat.getUsedVMs() > max) {
 				max = stat.getUsedVMs();
 			}
 		}
 
-		System.out.println("queue type " + type + " launched: " + launchedVMs
-				+ " max: " + max);
+		System.out.println("queue type " + type + " launched: " + launchedVMs + " max: " + max);
 		if (Math.ceil(launchedVMs * MAX_USAGE) <= max) {
+			
 			// launch as many VMs as needed to fulfill the 60% usage
 			int VMsNeeded = (int) Math.ceil((double) max / MAX_USAGE);
 			for (int i = 0; i < VMsNeeded - launchedVMs; i++) {
-				launchMachine(addDate(now, 1));
+				Date launchDate=addDate(now, 1);
+				launchMachine(launchDate);
 			}
 		}
 		if (Math.ceil(launchedVMs * MIN_USAGE) >= max && launchedVMs > 3) {
-			int VMsNeeded = Math.max((int) Math.ceil((double) max / MAX_USAGE),
-					3);
+			int VMsNeeded = Math.max((int) Math.ceil((double) max / MAX_USAGE), 3);
 			for (int i = 0; i < launchedVMs - VMsNeeded; i++) {
-				terminateMachine(addDate(now, 1));
+				Date launchDate=addDate(now, 1);
+				terminateMachine(launchDate);
 			}
 		}
 	}
 
 	private Date addDate(Date date, double seconds) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.MILLISECOND, (int) (seconds * 1000));
-		return cal.getTime();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.MILLISECOND, (int) (seconds * 1000));
+		return calendar.getTime();
 	}
 
 	public void launchMachine(Date date) {
@@ -105,30 +108,40 @@ public class MachineHolder {
 	}
 
 	public void simulateVMLoad(Job job) {
+		boolean foundAvailableMachine = hasFoundedAvailableMachine(job);
+		if (!foundAvailableMachine) {
+			Date jobDate=job.getDateTime();
+			Date busyTill=addDate(jobDate, job.getRuntimeInSeconds());
+			SimulatedMachine simulatedMachine=new SimulatedMachine(jobDate, busyTill);
+			addSimulatedMachine(simulatedMachine);
+		}
+	}
+
+	private boolean hasFoundedAvailableMachine(Job job) {
 		boolean foundAvailableMachine = false;
-		for (SimulatedMachine machine : randomMachines()) {
-			if (!machine.isBusy(addDate(job.getDateTime(), 5d))) {
-				machine.setBusyTill(addDate(
-						max(machine.getBusyTill(), job.getDateTime()),
-						job.getRuntimeInSeconds()));
+		List<SimulatedMachine> simulatedMachines=randomMachines();
+		for (SimulatedMachine machine : simulatedMachines) {
+			Date busyDate=addDate(job.getDateTime(), 5d);
+			if (!machine.isBusy(busyDate)) {
+				Date busyTillDate=machine.getBusyTill();
+				Date maxDate=max(busyTillDate, job.getDateTime());
+				Date date = addDate(maxDate,job.getRuntimeInSeconds());
+				machine.setBusyTill(date);
 				foundAvailableMachine = true;
 				break;
 			}
 		}
-		if (!foundAvailableMachine) {
-			addSimulatedMachine(
-					new SimulatedMachine(job.getDateTime(), addDate(job.getDateTime(), job.getRuntimeInSeconds())));
-		}
+		return foundAvailableMachine;
 	}
 
 	private List<SimulatedMachine> randomMachines() {
 		List<SimulatedMachine> ret = new ArrayList<SimulatedMachine>();
-		if (QMachines.size() > 0) {
-			int size = QMachines.size();
+		if (machines.size() > 0) {
+			int size = machines.size();
 			Random rnd = new Random();
 			int randomStart = rnd.nextInt(size);
 			for (int i = 0; i < size; i++) {
-				ret.add(QMachines.get((randomStart + i) % size));
+				ret.add(machines.get((randomStart + i) % size));
 			}
 		}
 		return ret;
