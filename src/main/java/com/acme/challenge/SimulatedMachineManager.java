@@ -12,7 +12,6 @@ import java.util.Random;
 
 import com.acme.challenge.model.MachineStrategy;
 
-
 public class SimulatedMachineManager {
 
 	public static final double MAX_USAGE = 0.6;
@@ -36,16 +35,12 @@ public class SimulatedMachineManager {
 	}
 
 	public void writeStatistics(Date now) {
-		updateStatisticsQueue(now, QueueType.URL);
-		updateStatisticsQueue(now, QueueType.GENERAL);
-		updateStatisticsQueue(now, QueueType.EXPORT);
+		updateStatisticsQueue(now);
 
-		processStatisticsQueue(now, QueueType.URL);
-		processStatisticsQueue(now, QueueType.GENERAL);
-		processStatisticsQueue(now, QueueType.EXPORT);
+		processStatisticsQueue(now);
 	}
 
-	public void launchMachine(Date date,QueueType type) {
+	public void launchMachine(Date date, QueueType type) {
 		switch (type) {
 		case URL:
 			urlMachines.launchMachine(date);
@@ -62,39 +57,18 @@ public class SimulatedMachineManager {
 		OutputWriter.writeVMCommand(date, Command.LAUNCH, type);
 	}
 
-	
-	private void processStatisticsQueue(Date now, QueueType queueType) {
+	private void processStatisticsQueue(Date now) {
 
-		switch (queueType) {
-		case URL:
-			urlMachines.processStatisticsQueue(now);
-			break;
-		case GENERAL:
-			generalMachines.processStatisticsQueue(now);
-			break;
-		case EXPORT:
-			exportMachines.processStatisticsQueue(now);
-			break;
-		default:
-			break;
-		}
+		urlMachines.processStatisticsQueue(now);
+		generalMachines.processStatisticsQueue(now);
+		exportMachines.processStatisticsQueue(now);
 	}
 
-	private void updateStatisticsQueue(Date now, QueueType queueType) {
+	private void updateStatisticsQueue(Date now) {
 
-		switch (queueType) {
-		case URL:
-			urlMachines.updateStatisticQue(now);
-			break;
-		case GENERAL:
-			generalMachines.updateStatisticQue(now);
-			break;
-		case EXPORT:
-			exportMachines.updateStatisticQue(now);
-			break;
-		default:
-			break;
-		}
+		urlMachines.updateStatisticQue(now);
+		generalMachines.updateStatisticQue(now);
+		exportMachines.updateStatisticQue(now);
 
 	}
 
