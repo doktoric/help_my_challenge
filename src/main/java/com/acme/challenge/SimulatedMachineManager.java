@@ -1,6 +1,8 @@
 package com.acme.challenge;
 
-import static com.acme.challenge.model.MachineHolder.machineCollector;
+import static com.acme.challenge.model.GeneralMachineStrategy.generalMachineStrategy;
+import static com.acme.challenge.model.UrlMachineStrategy.urlMachineStrategy;
+import static com.acme.challenge.model.ExportMachineStrategy.exportMachineStrategy;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,7 +10,8 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import com.acme.challenge.model.MachineHolder;
+import com.acme.challenge.model.MachineStrategy;
+
 
 public class SimulatedMachineManager {
 
@@ -18,9 +21,9 @@ public class SimulatedMachineManager {
 
 	private Date currentBlock = null;
 
-	MachineHolder urlMachines = machineCollector(QueueType.URL);
-	MachineHolder generalMachines = machineCollector(QueueType.GENERAL);
-	MachineHolder exportMachines = machineCollector(QueueType.EXPORT);
+	MachineStrategy urlMachines = urlMachineStrategy(QueueType.URL);
+	MachineStrategy generalMachines = generalMachineStrategy(QueueType.GENERAL);
+	MachineStrategy exportMachines = exportMachineStrategy(QueueType.EXPORT);
 
 	public void addMachine(SimulatedMachine machine, String type) {
 		if (type.equals("url")) {

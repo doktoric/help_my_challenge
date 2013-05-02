@@ -18,17 +18,14 @@ import com.acme.challenge.QueueType;
 import com.acme.challenge.SimulatedMachine;
 import com.acme.challenge.UsageStatistics;
 
-public class MachineHolder {
+public abstract class MachineStrategy {
 
-	private QueueType type;
-	private List<SimulatedMachine> machines = new ArrayList<SimulatedMachine>();
-	private PriorityQueue<UsageStatistics> statsQueue = new PriorityQueue<>();
-	private Integer launchedVMs = 0;
+	protected  QueueType type;
+	protected List<SimulatedMachine> machines = new ArrayList<SimulatedMachine>();
+	protected PriorityQueue<UsageStatistics> statsQueue = new PriorityQueue<>();
+	protected Integer launchedVMs = 0;
 
-	public MachineHolder(QueueType type) {
-		super();
-		this.type = type;
-	}
+	
 
 	public void decreaseVmSize() {
 		this.launchedVMs--;
@@ -42,7 +39,7 @@ public class MachineHolder {
 		machines.add(machine);
 	}
 
-	private Integer getBusyMachines(Date now) {
+	protected Integer getBusyMachines(Date now) {
 		Integer busyCount = 0;
 		for (SimulatedMachine machine : machines) {
 			if (machine.isBusy(now)) {
@@ -90,7 +87,7 @@ public class MachineHolder {
 		}
 	}
 
-	private Date addDate(Date date, double seconds) {
+	protected Date addDate(Date date, double seconds) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		calendar.add(Calendar.MILLISECOND, (int) (seconds * 1000));
@@ -117,7 +114,7 @@ public class MachineHolder {
 		}
 	}
 
-	private boolean hasFoundedAvailableMachine(Job job) {
+	protected boolean hasFoundedAvailableMachine(Job job) {
 		boolean foundAvailableMachine = false;
 		List<SimulatedMachine> simulatedMachines=randomMachines();
 		for (SimulatedMachine machine : simulatedMachines) {
@@ -134,7 +131,7 @@ public class MachineHolder {
 		return foundAvailableMachine;
 	}
 
-	private List<SimulatedMachine> randomMachines() {
+	protected List<SimulatedMachine> randomMachines() {
 		List<SimulatedMachine> ret = new ArrayList<SimulatedMachine>();
 		if (machines.size() > 0) {
 			int size = machines.size();
@@ -147,16 +144,12 @@ public class MachineHolder {
 		return ret;
 	}
 
-	private Date max(Date date1, Date date2) {
+	protected Date max(Date date1, Date date2) {
 		if (date1.getTime() > date2.getTime()) {
 			return date1;
 		} else {
 			return date2;
 		}
-	}
-
-	public static MachineHolder machineCollector(QueueType type) {
-		return new MachineHolder(type);
 	}
 
 }
