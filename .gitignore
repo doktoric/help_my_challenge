@@ -16,6 +16,12 @@ local.properties
 .settings/
 .loadpath
 target/
+week2result.xls
+week1result.xls
+week_1.log
+week_2.log
+evaluator.py
+simple_competitor.py
 
 # External tool builders
 .externalToolBuilders/
