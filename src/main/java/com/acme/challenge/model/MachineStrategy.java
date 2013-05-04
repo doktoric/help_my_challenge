@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.acme.challenge.Command;
 import com.acme.challenge.Job;
 import com.acme.challenge.OutputWriter;
@@ -20,6 +23,7 @@ import com.acme.challenge.UsageStatistics;
 
 public abstract class MachineStrategy {
 
+	protected static final Logger logger = LoggerFactory.getLogger(MachineStrategy.class);
 	protected  QueueType type;
 	protected List<SimulatedMachine> machines = new ArrayList<SimulatedMachine>();
 	protected PriorityQueue<UsageStatistics> statsQueue = new PriorityQueue<>();
@@ -28,10 +32,12 @@ public abstract class MachineStrategy {
 	
 
 	public void decreaseVmSize() {
+		logger.debug("Decreased VM count on "+ type.toString()+" queu where the previous was: " + launchedVMs+ " and the increased: "+(launchedVMs+1) );
 		this.launchedVMs--;
 	}
 
 	public void increaseVmSize() {
+		logger.debug("Increased VM count on "+ type.toString()+" queu where the previous was: " + launchedVMs+ " and the increased: "+(launchedVMs-1) );
 		this.launchedVMs++;
 	}
 
@@ -50,6 +56,7 @@ public abstract class MachineStrategy {
 	}
 
 	public void updateStatisticQue(Date now) {
+		logger.debug("update statitics on "+type.toString());
 		Integer busyCount=getBusyMachines(now);
 		UsageStatistics usageStatistics=new UsageStatistics(now, busyCount);
 		statsQueue.add(usageStatistics);
@@ -68,7 +75,7 @@ public abstract class MachineStrategy {
 			}
 		}
 
-		System.out.println("queue type " + type + " launched: " + launchedVMs + " max: " + max);
+//		System.out.println("queue type " + type + " launched: " + launchedVMs + " max: " + max);
 		if (Math.ceil(launchedVMs * MAX_USAGE) <= max) {
 			
 			// launch as many VMs as needed to fulfill the 60% usage
@@ -96,17 +103,20 @@ public abstract class MachineStrategy {
 
 	public void launchMachine(Date date) {
 		increaseVmSize();
+		logger.debug("Launch machine on "+type.toString() );
 		OutputWriter.writeVMCommand(date, Command.LAUNCH, type);
 	}
 
 	public void terminateMachine(Date date) {
 		decreaseVmSize();
+		logger.debug("Terminate machine on "+type.toString() );
 		OutputWriter.writeVMCommand(date, Command.TERMINATE, type);
 	}
 
 	public void simulateVMLoad(Job job) {
 		boolean foundAvailableMachine = hasFoundedAvailableMachine(job);
 		if (!foundAvailableMachine) {
+			logger.debug("No available machine on "+type.toString());
 			Date jobDate=job.getDateTime();
 			Date busyTill=addDate(jobDate, job.getRuntimeInSeconds());
 			SimulatedMachine simulatedMachine=new SimulatedMachine(jobDate, busyTill);
