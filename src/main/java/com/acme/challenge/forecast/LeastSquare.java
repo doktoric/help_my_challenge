@@ -15,6 +15,7 @@ public class LeastSquare {
 		int i = 0;
 		for (UsageStatistics usageStatistics : statsQueue) {
 			regression.addData(i, usageStatistics.getUsedVMs());
+			i++;
 		}
 		result = regression.getSlope();
 		return result;
@@ -27,10 +28,19 @@ public class LeastSquare {
 		int i = 0;
 		for (UsageStatistics usageStatistics : statsQueue) {
 			regression.addData(i, usageStatistics.getUsedVMs());
+			i++;
 		}
 		result = regression.getIntercept();
 		return result;
-
+	}
+	
+	public static double getDiffToIntercept(PriorityQueue<UsageStatistics> statsQueue,double intercept,int index) {
+		double result = 0;
+		UsageStatistics[] values= new UsageStatistics[statsQueue.size()];
+		statsQueue.toArray(values);
+		double actualValue=values[index].getUsedVMs();
+		result = actualValue-intercept;
+		return result;
 	}
 
 }
