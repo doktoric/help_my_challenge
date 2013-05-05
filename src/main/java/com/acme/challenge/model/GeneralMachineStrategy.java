@@ -11,12 +11,11 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import com.acme.challenge.Command;
-import com.acme.challenge.Job;
 import com.acme.challenge.OutputWriter;
-import com.acme.challenge.QueueType;
-import com.acme.challenge.SimulatedMachine;
-import com.acme.challenge.UsageStatistics;
+import com.acme.challenge.base.Command;
+import com.acme.challenge.base.Job;
+import com.acme.challenge.base.QueueType;
+import com.acme.challenge.base.UsageStatistics;
 
 public  class GeneralMachineStrategy extends MachineStrategy{
 

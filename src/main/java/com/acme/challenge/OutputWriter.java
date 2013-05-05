@@ -3,6 +3,9 @@ package com.acme.challenge;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.acme.challenge.base.Command;
+import com.acme.challenge.base.QueueType;
+
 public class OutputWriter {
 	
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

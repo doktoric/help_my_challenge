@@ -10,13 +10,17 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 
+import com.acme.challenge.base.Command;
+import com.acme.challenge.base.Job;
+import com.acme.challenge.base.QueueType;
 import com.acme.challenge.model.MachineStrategy;
+import com.acme.challenge.model.SimulatedMachine;
 
 public class SimulatedMachineManager {
 
 	public static final double MAX_USAGE = 0.6;
 	public static final double MIN_USAGE = 0.4;
-	public static final int MAX_QUEUE_SIZE = 60;
+	public static final int MAX_QUEUE_SIZE = 3600;
 
 	private Date currentBlock = null;
 

@@ -14,12 +14,11 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.acme.challenge.Command;
-import com.acme.challenge.Job;
 import com.acme.challenge.OutputWriter;
-import com.acme.challenge.QueueType;
-import com.acme.challenge.SimulatedMachine;
-import com.acme.challenge.UsageStatistics;
+import com.acme.challenge.base.Command;
+import com.acme.challenge.base.Job;
+import com.acme.challenge.base.QueueType;
+import com.acme.challenge.base.UsageStatistics;
 
 public abstract class MachineStrategy {
 
@@ -66,7 +65,6 @@ public abstract class MachineStrategy {
 	}
 
 	public void processStatisticsQueue(Date now) {
-		//int sum = 0;
 		int max = 0;
 		for (UsageStatistics stat : statsQueue) {
 			//sum += stat.getUsedVMs();
@@ -75,7 +73,6 @@ public abstract class MachineStrategy {
 			}
 		}
 
-//		System.out.println("queue type " + type + " launched: " + launchedVMs + " max: " + max);
 		if (Math.ceil(launchedVMs * MAX_USAGE) <= max) {
 			
 			// launch as many VMs as needed to fulfill the 60% usage

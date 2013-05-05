@@ -1,4 +1,4 @@
-package com.acme.challenge;
+package com.acme.challenge.base;
 
 import java.util.Date;
 

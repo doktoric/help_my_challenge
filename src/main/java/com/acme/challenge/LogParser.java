@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
+import com.acme.challenge.base.Job;
+import com.acme.challenge.base.QueueType;
+
 public class LogParser {
 
     private SimulatedMachineManager machineManager;
