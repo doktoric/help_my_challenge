@@ -6,6 +6,7 @@ import java.util.PriorityQueue;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.acme.challenge.base.UsageStatistics;
@@ -36,22 +37,25 @@ public class LeastSquareTest {
 	
 	
 	
-//	@Test
-//	public void InterceptOnBaseArrayTest(){
-//		Assert.assertEquals(2.0,underTest.getIntercept(statsQueue));
-//	}
-//	
-//	@Test
-//	public void SlopeOnBaseArrayTest(){
-//		Assert.assertEquals(2.0,underTest.getSlope(statsQueue));
-//	}
-//	
-//	@Test
-//	public void DiffTestWithBaseValuesTest(){
-//		double intercept=underTest.getIntercept(statsQueue);
-//		Assert.assertEquals(intercept,underTest.getDiffToIntercept(statsQueue, intercept, 0));
-//	}
-//	
+	@Test
+	@Ignore
+	public void InterceptOnBaseArrayTest(){
+		Assert.assertEquals(2.0,underTest.getIntercept(statsQueue));
+	}
+	
+	@Test
+	@Ignore
+	public void SlopeOnBaseArrayTest(){
+		Assert.assertEquals(2.0,underTest.getSlope(statsQueue));
+	}
+	
+	@Test
+	@Ignore
+	public void DiffTestWithBaseValuesTest(){
+		double intercept=underTest.getIntercept(statsQueue);
+		Assert.assertEquals(intercept,underTest.getDiffToIntercept(statsQueue, intercept, 0));
+	}
+	
 	@Test
 	public void IsAlwaysIncreaseOnBaseArrayTest(){
 		Assert.assertEquals(true,underTest.isAlwaysIncrease(statsQueue));

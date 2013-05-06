@@ -1,5 +1,6 @@
 package com.acme.challenge.forecast;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -68,8 +69,9 @@ public class LeastSquare {
 	
 	private static List<UsageStatistics> getSortedCollection(PriorityQueue<UsageStatistics> statsQueue1)
 	{
-		UsageStatistics[] statsQueueArray= (UsageStatistics[]) statsQueue1.toArray();
-		List<UsageStatistics> statsQueue=Arrays.asList(statsQueueArray);
+//		UsageStatistics[] statsQueueArray= (UsageStatistics[]) statsQueue1.toArray();
+//		List<UsageStatistics> statsQueue=Arrays.asList(statsQueueArray);
+		List<UsageStatistics> statsQueue=new ArrayList<UsageStatistics>(statsQueue1);
 		Collections.sort(statsQueue);
 		return statsQueue;
 	}
