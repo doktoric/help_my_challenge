@@ -42,6 +42,8 @@ public class LeastSquaresTest {
 		statsQueue.add(new UsageStatistics(cal.getTime(),10));
 		cal.set(2009, Calendar.DECEMBER, 2);
 		statsQueue.add(new UsageStatistics(cal.getTime(),3));
+		
+		//2,3,4,5,6,7,8,9,10,11
 	}
 	
 	
@@ -68,6 +70,13 @@ public class LeastSquaresTest {
 		SimpleRegression regression = underTest.createRegression(statsQueue);
 		Assert.assertEquals(0.0,underTest.getSlopeStdError(regression));
 	}
+	
+	@Test
+	public void testForecastMultiplier(){
+		double m = underTest.getForecastMultiplyer(statsQueue,2);
+		Assert.assertEquals(0.0,m);
+	}
+	
 //	
 //	@Test
 //	@Ignore

@@ -38,36 +38,58 @@ public class LeastSquares {
 		double multiplier = 1;
 		List<UsageStatistics> statsList = getSortedCollection(statsQueue);
 		List<Double> rates = new ArrayList<Double>();
-		
-		//szétbontja szegmensekre az adott statisztikákat
+
+		// szétbontja szegmensekre az adott statisztikákat
 		if (statsList.size() > separator) {
 			for (int i = 0; i < statsList.size(); i = i + separator) {
-				//minden szegmensnek kiszámolja az átlagát
-				rates.add(getSegmentMiddleValue(statsList.subList(i, i
-						+ separator)));
+				// minden szegmensnek kiszámolja az átlagát
+				if (i + separator < statsList.size()) {
+					rates.add(getSegmentMiddleValue(statsList.subList(i, i
+							+ separator)));
+				} else {
+					rates.add(getSegmentMiddleValue(statsList.subList(i,
+							statsList.size())));
+				}
+
 			}
-			//2,2,4,8,32,
+			// 2,2,4,8,32,
 			List<Double> ratesBetweenElements = new ArrayList<Double>();
-			for (int i = 0; i < rates.size()-1; i++) {
-				//összerakja az átlagértékek közti arányt
-				ratesBetweenElements.add(rates.get(i)/rates.get(i+1));
+			for (int i = 0; i < rates.size() - 1; i++) {
+				// összerakja az átlagértékek közti arányt
+				ratesBetweenElements.add(rates.get(i) / rates.get(i + 1));
 			}
-			//1,2,2,3
-			List<Double> series=getMostLongSeries(ratesBetweenElements);
-			//2,3
-			//1,3,4,8,12
-			//3,1.25,2,1.33
-			double sum=0;
-			for (int i = 0; i < series.size(); i++) {
-				sum+=series.get(i);
+			// 1,2,2,3
+			List<Double> series = getMostLongSeries(ratesBetweenElements);
+			series = reverseList(series);
+
+			// 2,3
+			// 1,3,4,8,12
+			// 3,1.25,2,1.33
+			List<Double> diffs = new ArrayList<Double>();
+			for (int i = 0; i < series.size() - 1; i++) {
+				diffs.add(series.get(i + 1) - series.get(i));
 			}
-			multiplier=sum/series.size();	
+			double sum = 0;
+			for (Double double1 : diffs) {
+				sum += double1;
+			}
+			sum = sum / diffs.size();
+
+			if (series.size() > 0) {
+				multiplier = series.get(series.size() - 1) + sum;
+			}
 		}
-		
-		
 
 		return multiplier;
 
+	}
+
+	private List<Double> reverseList(List<Double> myList) {
+		List<Double> invertedList = new ArrayList<Double>();
+		for (int i = myList.size() - 1; i >= 0; i--) {
+			invertedList.add(myList.get(i));
+		}
+		return invertedList;
 	}
 
 	private List<Double> getMostLongSeries(List<Double> values) {
@@ -75,25 +97,21 @@ public class LeastSquares {
 		Boolean isDec = null;
 		for (int i = values.size() - 2; i >= 0; i--) {
 			if (isDec == null) {
-				returnSerie.add(values.get(i+1));
+				returnSerie.add(values.get(i + 1));
 				returnSerie.add(values.get(i));
 				if (values.get(i) < values.get(i + 1)) {
-					isDec= new Boolean(true);
+					isDec = new Boolean(true);
 				}
-			}
-			else if(!isDec){
-				if(values.get(i) > values.get(i + 1)){
+			} else if (!isDec) {
+				if (values.get(i) > values.get(i + 1)) {
 					returnSerie.add(values.get(i));
-				}
-				else{
+				} else {
 					break;
 				}
-			}
-			else if(isDec){
-				if(values.get(i) < values.get(i + 1)){
+			} else if (isDec) {
+				if (values.get(i) < values.get(i + 1)) {
 					returnSerie.add(values.get(i));
-				}
-				else{
+				} else {
 					break;
 				}
 			}
