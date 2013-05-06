@@ -2,7 +2,6 @@ package com.acme.challenge.forecast;
 
 import java.util.PriorityQueue;
 
-import org.apache.commons.math3.stat.regression.RegressionResults;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import com.acme.challenge.base.UsageStatistics;
