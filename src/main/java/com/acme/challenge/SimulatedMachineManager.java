@@ -26,9 +26,9 @@ public class SimulatedMachineManager {
 	}
 
 	private void processStatisticsQueues(Date now) {
-		urlMachineStrategy.processStatisticsQueue(now);
-		generalMachineStrategy.processStatisticsQueue(now);
-		exportMachineStrategy.processStatisticsQueue(now);
+		urlMachineStrategy.processStatisticsQueueVersion1(now);
+		generalMachineStrategy.processStatisticsQueueVersion1(now);
+		exportMachineStrategy.processStatisticsQueueVersion1(now);
 	}
 
 	private void updateStatisticsQueues(Date now) {
