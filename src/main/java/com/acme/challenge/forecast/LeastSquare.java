@@ -1,5 +1,8 @@
 package com.acme.challenge.forecast;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.PriorityQueue;
 
 import org.apache.commons.math3.stat.regression.RegressionResults;
@@ -9,9 +12,10 @@ import com.acme.challenge.base.UsageStatistics;
 
 public class LeastSquare {
 
-	public static double getSlope(PriorityQueue<UsageStatistics> statsQueue) {
+	public static double getSlope(PriorityQueue<UsageStatistics> statsQueue1) {
 		double result = 0;
 		SimpleRegression regression = new SimpleRegression();
+		List<UsageStatistics> statsQueue=getSortedCollection(statsQueue1);
 		int i = 0;
 		for (UsageStatistics usageStatistics : statsQueue) {
 			regression.addData(i, usageStatistics.getUsedVMs());
@@ -22,9 +26,10 @@ public class LeastSquare {
 
 	}
 
-	public static double getIntercept(PriorityQueue<UsageStatistics> statsQueue) {
+	public static double getIntercept(PriorityQueue<UsageStatistics> statsQueue1) {
 		double result = 0;
 		SimpleRegression regression = new SimpleRegression();
+		List<UsageStatistics> statsQueue=getSortedCollection(statsQueue1);
 		int i = 0;
 		for (UsageStatistics usageStatistics : statsQueue) {
 			regression.addData(i, usageStatistics.getUsedVMs());
@@ -35,20 +40,20 @@ public class LeastSquare {
 	}
 
 	public static double getDiffToIntercept(
-			PriorityQueue<UsageStatistics> statsQueue, double intercept,
+			PriorityQueue<UsageStatistics> statsQueue1, double intercept,
 			int index) {
 		double result = 0;
-		UsageStatistics[] values = new UsageStatistics[statsQueue.size()];
-		statsQueue.toArray(values);
-		double actualValue = values[index].getUsedVMs();
+		List<UsageStatistics> statsQueue=getSortedCollection(statsQueue1);
+		double actualValue = statsQueue.get(index).getUsedVMs();
 		result = actualValue - intercept;
 		return result;
 	}
 
 	public static boolean isAlwaysIncrease(
-			PriorityQueue<UsageStatistics> statsQueue) {
+			PriorityQueue<UsageStatistics> statsQueue1) {
 		boolean result = true;
 		Integer value = null;
+		List<UsageStatistics> statsQueue=getSortedCollection(statsQueue1);
 		for (UsageStatistics usageStatistics : statsQueue) {
 			if (value == null) {
 				value = usageStatistics.getUsedVMs();
@@ -60,5 +65,13 @@ public class LeastSquare {
 			}
 		}
 		return result;
+	}
+	
+	private static List<UsageStatistics> getSortedCollection(PriorityQueue<UsageStatistics> statsQueue1)
+	{
+		UsageStatistics[] statsQueueArray= (UsageStatistics[]) statsQueue1.toArray();
+		List<UsageStatistics> statsQueue=Arrays.asList(statsQueueArray);
+		Collections.sort(statsQueue);
+		return statsQueue;
 	}
 }
