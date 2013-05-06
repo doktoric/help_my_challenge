@@ -1,9 +1,5 @@
 package com.acme.challenge.model;
 
-import static com.acme.challenge.SimulatedMachineManager.MAX_QUEUE_SIZE;
-import static com.acme.challenge.SimulatedMachineManager.MAX_USAGE;
-import static com.acme.challenge.SimulatedMachineManager.MIN_USAGE;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +14,10 @@ import com.acme.challenge.base.QueueType;
 import com.acme.challenge.base.UsageStatistics;
 
 public abstract class MachineStrategy {
+	
+	public static final double MAX_USAGE = 0.6;
+	public static final double MIN_USAGE = 0.4;
+	public static final int MAX_QUEUE_SIZE = 3600;
 
 	protected  QueueType type;
 	protected List<SimulatedMachine> machines = new ArrayList<SimulatedMachine>();
@@ -50,10 +50,9 @@ public abstract class MachineStrategy {
 		return busyCount;
 	}
 
-	public void updateStatisticQue(Date now) {
+	public void updateStatisticQueue(Date now) {
 //		System.out.println("update statitics on "+type.toString());
-		Integer busyCount=getBusyMachines(now);
-		UsageStatistics usageStatistics=new UsageStatistics(now, busyCount);
+		UsageStatistics usageStatistics=new UsageStatistics(now, getBusyMachines(now));
 		statsQueue.add(usageStatistics);
 		if (statsQueue.size() > MAX_QUEUE_SIZE) {
 			statsQueue.poll();
@@ -105,9 +104,9 @@ public abstract class MachineStrategy {
 	}
 
 	public void simulateVMLoad(Job job) {
-		boolean foundAvailableMachine = hasFoundedAvailableMachine(job);
+		boolean foundAvailableMachine = hasFoundAvailableMachine(job);
 		if (!foundAvailableMachine) {
-			System.out.println("No available machine on "+type.toString());
+//			System.out.println("No available machine on "+type.toString());
 			Date jobDate=job.getDateTime();
 			Date busyTill=addDate(jobDate, job.getRuntimeInSeconds());
 			SimulatedMachine simulatedMachine=new SimulatedMachine(jobDate, busyTill);
@@ -115,7 +114,7 @@ public abstract class MachineStrategy {
 		}
 	}
 
-	protected boolean hasFoundedAvailableMachine(Job job) {
+	protected boolean hasFoundAvailableMachine(Job job) {
 		boolean foundAvailableMachine = false;
 		List<SimulatedMachine> simulatedMachines=randomMachines();
 		for (SimulatedMachine machine : simulatedMachines) {

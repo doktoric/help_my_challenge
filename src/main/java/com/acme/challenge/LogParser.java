@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
 
 import com.acme.challenge.base.Job;
@@ -12,8 +11,6 @@ import com.acme.challenge.base.QueueType;
 
 public class LogParser {
 
-	private static final int INITIAL_MACHINE_COUNT = 3;
-	
 	private SimulatedMachineManager machineManager;
 
 	public LogParser(SimulatedMachineManager machineManager) {
@@ -32,7 +29,14 @@ public class LogParser {
 			System.out.println("Cannot parse date!");
 		}
 		job.setId(blocks[2]);
-		job.setQueueType(blocks[3]);
+		if ("url".equals(blocks[3])) {
+			job.setQueueType(QueueType.URL);
+		} else if ("general".equals(blocks[3])) {
+			job.setQueueType(QueueType.GENERAL);
+		} else if ("export".equals(blocks[3])) {
+			job.setQueueType(QueueType.EXPORT);
+		}
+		
 		job.setRuntimeInSeconds(Double.valueOf(blocks[4]));
 		job.setJobOutput(line);
 		return job;
@@ -47,7 +51,7 @@ public class LogParser {
 			while (input.hasNext()) {
 				Job job = parseLine(input.nextLine());
 				if (lineNumber == 0) {
-					startInitialMachines(job.getDateTime());
+					machineManager.launchInitialMachines(job.getDateTime());
 				}
 				machineManager.processJob(job);
 				lineNumber++;
@@ -55,14 +59,6 @@ public class LogParser {
 			input.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
-	}
-
-	private void startInitialMachines(Date date) {
-		for (int i = 0; i < INITIAL_MACHINE_COUNT; i++) {
-			machineManager.launchMachine(date, QueueType.URL);
-			machineManager.launchMachine(date, QueueType.GENERAL);
-			machineManager.launchMachine(date, QueueType.EXPORT);
 		}
 	}
 }

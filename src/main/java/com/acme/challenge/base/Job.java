@@ -6,14 +6,14 @@ public class Job {
 
     private Date dateTime;
     private String id;
-    private String queueType;
+    private QueueType queueType;
     private double runtimeInSeconds;
     private String jobOutput;
 
     public Job() {
     }
 
-    public Job(Date dateTime, String dateString, String id, String queueType, double runtimeInSeconds, String jobOutput) {
+    public Job(Date dateTime, String dateString, String id, QueueType queueType, double runtimeInSeconds, String jobOutput) {
         super();
         this.dateTime = dateTime;
         this.id = id;
@@ -43,11 +43,11 @@ public class Job {
         this.id = id;
     }
 
-    public String getQueueType() {
+    public QueueType getQueueType() {
         return queueType;
     }
 
-    public void setQueueType(String queueType) {
+    public void setQueueType(QueueType queueType) {
         this.queueType = queueType;
     }
 
