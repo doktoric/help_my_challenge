@@ -1,5 +1,6 @@
 package com.acme.challenge;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.PriorityQueue;
 
@@ -21,17 +22,29 @@ public class LeastSquareTest {
 	public void setUp(){
 		underTest=new LeastSquare();
 		statsQueue=new PriorityQueue<UsageStatistics>();
-		statsQueue.add(new UsageStatistics(new Date(),0));
-		statsQueue.add(new UsageStatistics(new Date(),1));
-		statsQueue.add(new UsageStatistics(new Date(),2));
-		statsQueue.add(new UsageStatistics(new Date(),3));
-		statsQueue.add(new UsageStatistics(new Date(),4));
-		statsQueue.add(new UsageStatistics(new Date(),5));
-		statsQueue.add(new UsageStatistics(new Date(),6));
-		statsQueue.add(new UsageStatistics(new Date(),7));
-		statsQueue.add(new UsageStatistics(new Date(),8));
-		statsQueue.add(new UsageStatistics(new Date(),9));
-		statsQueue.add(new UsageStatistics(new Date(),10));
+		Calendar cal = Calendar.getInstance();
+		cal.set(2009, Calendar.DECEMBER, 1);
+		statsQueue.add(new UsageStatistics(cal.getTime(),0));
+		cal.set(2009, Calendar.DECEMBER, 2);
+		statsQueue.add(new UsageStatistics(cal.getTime(),1));
+		cal.set(2009, Calendar.DECEMBER, 3);
+		statsQueue.add(new UsageStatistics(cal.getTime(),2));
+		cal.set(2009, Calendar.DECEMBER, 4);
+		statsQueue.add(new UsageStatistics(cal.getTime(),3));
+		cal.set(2009, Calendar.DECEMBER, 5);
+		statsQueue.add(new UsageStatistics(cal.getTime(),4));
+		cal.set(2009, Calendar.DECEMBER, 6);
+		statsQueue.add(new UsageStatistics(cal.getTime(),5));
+		cal.set(2009, Calendar.DECEMBER, 7);
+		statsQueue.add(new UsageStatistics(cal.getTime(),6));
+		cal.set(2009, Calendar.DECEMBER, 8);
+		statsQueue.add(new UsageStatistics(cal.getTime(),7));
+		cal.set(2009, Calendar.DECEMBER, 9);
+		statsQueue.add(new UsageStatistics(cal.getTime(),8));
+		cal.set(2009, Calendar.DECEMBER, 10);
+		statsQueue.add(new UsageStatistics(cal.getTime(),9));
+		cal.set(2009, Calendar.DECEMBER, 11);
+		statsQueue.add(new UsageStatistics(cal.getTime(),10));
 		
 	}
 	
