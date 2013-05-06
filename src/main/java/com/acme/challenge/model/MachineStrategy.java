@@ -98,17 +98,17 @@ public abstract class MachineStrategy {
 	public void processStatisticsQueueVersion1(Date now) {
 		SimpleRegression regression = leastSquares.createRegression(statsQueue);
 		double forecast = leastSquares.getForecast(regression,	statsQueue.size() + FORECAST_DISTANCE);
-//		System.out.println("busy: " + getBusyMachines(now) + " predict: " + forecast + " launched: " + launchedVMs);
+		System.out.println("busy: " + getBusyMachines(now) + " predict: " + forecast + " launched: " + launchedVMs);
 
 		if (Math.ceil(launchedVMs * MAX_USAGE) <= forecast) {
 			// launch as many VMs as needed to fulfill the 60% usage
-			int VMsNeeded = (int) Math.ceil((double) forecast / MAX_USAGE);
+			int VMsNeeded = (int) Math.ceil((double) forecast / MAX_USAGE*(leastSquares.getForecastMultiplyer(statsQueue, 60)));
 			for (int i = 0; i < VMsNeeded - launchedVMs; i++) {
 				launchMachine(addDate(now, 1));
 			}
 		}
 		if (Math.ceil(launchedVMs * MIN_USAGE) >= forecast && launchedVMs > 5) {
-			int VMsNeeded = Math.max((int) Math.ceil((double) forecast / MAX_USAGE), 5);
+			int VMsNeeded = Math.max((int) Math.ceil((double) forecast / MAX_USAGE*(leastSquares.getForecastMultiplyer(statsQueue, 60))), 5);
 			for (int i = 0; i < launchedVMs - VMsNeeded; i++) {
 				terminateMachine(addDate(now, 1));
 			}
@@ -135,7 +135,7 @@ public abstract class MachineStrategy {
 	public void simulateVMLoad(Job job) {
 		boolean foundAvailableMachine = hasFoundAvailableMachine(job);
 		if (!foundAvailableMachine) {
-			// System.out.println("No available machine on "+type.toString());
+			 System.out.println("No available machine on "+type.toString());
 			Date jobDate = job.getDateTime();
 			Date busyTill = addDate(jobDate, job.getRuntimeInSeconds());
 			SimulatedMachine simulatedMachine = new SimulatedMachine(jobDate,
