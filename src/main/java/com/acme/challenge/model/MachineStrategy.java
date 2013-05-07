@@ -102,13 +102,13 @@ public abstract class MachineStrategy {
 
 		if (Math.ceil(launchedVMs * MAX_USAGE) <= forecast) {
 			// launch as many VMs as needed to fulfill the 60% usage
-			int VMsNeeded = (int) Math.ceil((double) forecast / MAX_USAGE*(leastSquares.getForecastMultiplyer(statsQueue, 60)));
+			int VMsNeeded = (int) Math.ceil((double) forecast / MAX_USAGE);
 			for (int i = 0; i < VMsNeeded - launchedVMs; i++) {
 				launchMachine(addDate(now, 1));
 			}
 		}
 		if (Math.ceil(launchedVMs * MIN_USAGE) >= forecast && launchedVMs > 5) {
-			int VMsNeeded = Math.max((int) Math.ceil((double) forecast / MAX_USAGE*(leastSquares.getForecastMultiplyer(statsQueue, 60))), 5);
+			int VMsNeeded = Math.max((int) Math.ceil((double) forecast / MAX_USAGE), 5);
 			for (int i = 0; i < launchedVMs - VMsNeeded; i++) {
 				terminateMachine(addDate(now, 1));
 			}
