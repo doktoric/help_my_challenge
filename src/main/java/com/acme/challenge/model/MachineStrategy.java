@@ -90,7 +90,7 @@ public abstract class MachineStrategy {
 					3);
 			for (int i = 0; i < launchedVMs - VMsNeeded; i++) {
 				Date launchDate = addDate(now, 1);
-				terminateMachine(launchDate);
+				terminateMachine(launchDate,VMsNeeded);
 			}
 		}
 	}
@@ -109,9 +109,9 @@ public abstract class MachineStrategy {
 		}
 		if (Math.ceil(launchedVMs * MIN_USAGE) >= forecast && launchedVMs > 5) {
 			int VMsNeeded = Math.max((int) Math.ceil((double) forecast / MAX_USAGE), 5);
-			for (int i = 0; i < launchedVMs - VMsNeeded; i++) {
-				terminateMachine(addDate(now, 1));
-			}
+			//for (int i = 0; i < launchedVMs - VMsNeeded; i++) {
+				terminateMachine(addDate(now, 1),VMsNeeded);
+		//	}
 		}
 	}
 
@@ -127,13 +127,20 @@ public abstract class MachineStrategy {
 		OutputWriter.writeVMCommand(date, Command.LAUNCH, type);
 	}
 
-	public abstract void terminateMachine(Date date);
-	
-//	public void terminateMachine(Date date) {
-//		decreaseVmSize();
-//		OutputWriter.writeVMCommand(date, Command.TERMINATE, type);
-//	}
+	public void terminateMachine(Date date, int VMsNeeded) {
+		// TODO Auto-generated method stub
+		for (SimulatedMachine machine : machines) {
+			long diff = machine.getActiveFrom().getTime() - date.getTime();
+			if (VMsNeeded <= launchedVMs && isInTerminateTime(diff)) {
+				decreaseVmSize();
+				OutputWriter.writeVMCommand(date, Command.TERMINATE, type);
+			}
+		}
 
+	}
+	
+	protected abstract boolean isInTerminateTime(long diff);
+	
 	public void simulateVMLoad(Job job) {
 		boolean foundAvailableMachine = hasFoundAvailableMachine(job);
 		if (!foundAvailableMachine) {
