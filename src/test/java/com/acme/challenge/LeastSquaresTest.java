@@ -71,12 +71,7 @@ public class LeastSquaresTest {
 		Assert.assertEquals(0.0,underTest.getSlopeStdError(regression));
 	}
 	
-	@Test
-	public void testForecastMultiplier(){
-		double m = underTest.getForecastMultiplyer(statsQueue,2);
-		Assert.assertEquals(0.0,m);
-	}
-	
+
 //	
 //	@Test
 //	@Ignore

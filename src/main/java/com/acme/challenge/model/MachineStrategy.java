@@ -127,10 +127,12 @@ public abstract class MachineStrategy {
 		OutputWriter.writeVMCommand(date, Command.LAUNCH, type);
 	}
 
-	public void terminateMachine(Date date) {
-		decreaseVmSize();
-		OutputWriter.writeVMCommand(date, Command.TERMINATE, type);
-	}
+	public abstract void terminateMachine(Date date);
+	
+//	public void terminateMachine(Date date) {
+//		decreaseVmSize();
+//		OutputWriter.writeVMCommand(date, Command.TERMINATE, type);
+//	}
 
 	public void simulateVMLoad(Job job) {
 		boolean foundAvailableMachine = hasFoundAvailableMachine(job);
