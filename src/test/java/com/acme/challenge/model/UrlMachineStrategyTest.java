@@ -1,11 +1,9 @@
 package com.acme.challenge.model;
 
-import static org.junit.Assert.*;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +14,12 @@ public class UrlMachineStrategyTest {
 
 	
 	MachineStrategy underTest;
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	@Before
 	public void setUp() throws ParseException{
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 		underTest=new UrlMachineStrategy(QueueType.URL);
-		List<SimulatedMachine> machines=new ArrayList<>();
 		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:54:52"), dateFormat.parse("2013-03-01 00:00:52")));
 		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:52"), dateFormat.parse("2013-03-01 00:00:52")));
 		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:58:52"), dateFormat.parse("2013-03-01 00:00:52")));
@@ -33,12 +31,25 @@ public class UrlMachineStrategyTest {
 		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:55"), dateFormat.parse("2013-03-01 00:00:52")));
 		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:32"), dateFormat.parse("2013-03-01 00:00:52")));
 		
-		
+		underTest.launchedVMs=10; 
 	}
 	
 	@Test
-	public void test() {
-		
+	public void testWithTerminatingWith7VM() throws ParseException {
+		underTest.terminateMachine(dateFormat.parse("2013-03-01 00:59:59"), 7);
+		Assert.assertEquals(new Integer(7), underTest.launchedVMs);
+	}
+	
+	@Test
+	public void testWithTerminatingWith9VM() throws ParseException {
+		underTest.terminateMachine(dateFormat.parse("2013-03-01 00:59:59"), 9);
+		Assert.assertEquals(new Integer(9), underTest.launchedVMs);
+	}
+	
+	@Test
+	public void testWithTerminatingWith9VMButFalseTime() throws ParseException {
+		underTest.terminateMachine(dateFormat.parse("2013-03-02 00:59:59"), 9);
+		Assert.assertEquals(new Integer(10), underTest.launchedVMs);
 	}
 
 }

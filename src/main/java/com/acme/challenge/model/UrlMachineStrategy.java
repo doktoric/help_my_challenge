@@ -8,7 +8,7 @@ import com.acme.challenge.base.QueueType;
 
 public class UrlMachineStrategy extends MachineStrategy {
 
-	private Integer END_OF_HOUR = 6000;
+	private Integer END_OF_HOUR = 10000;
 
 	public UrlMachineStrategy(QueueType type) {
 
