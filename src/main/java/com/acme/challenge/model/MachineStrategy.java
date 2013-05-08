@@ -1,5 +1,9 @@
 package com.acme.challenge.model;
 
+
+import static com.acme.challenge.Helper.addDate;
+import static com.acme.challenge.Helper.max;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +16,7 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
 import com.acme.challenge.OutputWriter;
 import com.acme.challenge.base.Command;
 import com.acme.challenge.base.Job;
+import com.acme.challenge.base.Machine;
 import com.acme.challenge.base.QueueType;
 import com.acme.challenge.base.UsageStatistics;
 import com.acme.challenge.forecast.LeastSquares;
@@ -24,7 +29,8 @@ public abstract class MachineStrategy {
 	public static final int FORECAST_DISTANCE = 120;
 
 	protected QueueType type;
-	protected List<SimulatedMachine> machines = new ArrayList<SimulatedMachine>();
+	protected List<SimulatedMachine> simulatedMachines = new ArrayList<SimulatedMachine>();
+	protected List<Machine> machines = new ArrayList<Machine>();
 	protected PriorityQueue<UsageStatistics> statsQueue = new PriorityQueue<>();
 	protected Integer launchedVMs = 0;
 
@@ -45,12 +51,12 @@ public abstract class MachineStrategy {
 	}
 
 	public void addSimulatedMachine(SimulatedMachine machine) {
-		machines.add(machine);
+		simulatedMachines.add(machine);
 	}
 
 	protected Integer getBusyMachines(Date now) {
 		Integer busyCount = 0;
-		for (SimulatedMachine machine : machines) {
+		for (SimulatedMachine machine : simulatedMachines) {
 			if (machine.isBusy(now)) {
 				busyCount++;
 			}
@@ -118,12 +124,7 @@ public abstract class MachineStrategy {
 		}
 	}
 
-	protected Date addDate(Date date, double seconds) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.add(Calendar.MILLISECOND, (int) (seconds * 1000));
-		return calendar.getTime();
-	}
+	
 
 	public void launchMachine(Date date) {
 		increaseVmSize();
@@ -132,7 +133,7 @@ public abstract class MachineStrategy {
 
 	public void terminateMachine(Date date, int VMsNeeded) {
 		// TODO Auto-generated method stub
-		for (SimulatedMachine machine : machines) {
+		for (SimulatedMachine machine : simulatedMachines) {
 			long diff = date.getTime() - machine.getActiveFrom().getTime();
 			System.out.println("now:" + date);
 			System.out.println("active from:"
@@ -178,23 +179,16 @@ public abstract class MachineStrategy {
 
 	protected List<SimulatedMachine> randomMachines() {
 		List<SimulatedMachine> ret = new ArrayList<SimulatedMachine>();
-		if (machines.size() > 0) {
-			int size = machines.size();
+		if (simulatedMachines.size() > 0) {
+			int size = simulatedMachines.size();
 			Random rnd = new Random();
 			int randomStart = rnd.nextInt(size);
 			for (int i = 0; i < size; i++) {
-				ret.add(machines.get((randomStart + i) % size));
+				ret.add(simulatedMachines.get((randomStart + i) % size));
 			}
 		}
 		return ret;
 	}
 
-	protected Date max(Date date1, Date date2) {
-		if (date1.getTime() > date2.getTime()) {
-			return date1;
-		} else {
-			return date2;
-		}
-	}
 
 }
