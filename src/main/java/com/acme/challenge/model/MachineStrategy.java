@@ -1,34 +1,31 @@
 package com.acme.challenge.model;
 
 import static com.acme.challenge.Helper.addDate;
-import static com.acme.challenge.Helper.max;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Random;
 
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
-import com.acme.challenge.OutputWriter;
-import com.acme.challenge.base.Command;
-import com.acme.challenge.base.Job;
-import com.acme.challenge.base.Machine;
 import com.acme.challenge.base.QueueType;
 import com.acme.challenge.base.UsageStatistics;
 import com.acme.challenge.forecast.LeastSquares;
-import com.acme.challenge.simulation.SimulatedMachine;
-import com.acme.challenge.simulation.SimulatedMachineManager;
+import com.acme.challenge.model.manager.MachineManager;
 
 public abstract class MachineStrategy {
 
-	public static final double MAX_USAGE = 0.6;
-	public static final double MIN_USAGE = 0.4;
-	public static final int FORECAST_DISTANCE = 120;
 
 	protected MachineManager machineManager;
+
+	public MachineManager getMachineManager() {
+		return machineManager;
+	}
+
+	public void setMachineManager(MachineManager machineManager) {
+		this.machineManager = machineManager;
+	}
+
 	protected LeastSquares leastSquares = new LeastSquares();
 	protected QueueType type;
 
@@ -47,17 +44,17 @@ public abstract class MachineStrategy {
 			}
 		}
 
-		if (Math.ceil(getNrOfLaunchedVMs() * MAX_USAGE) <= max) {
+		if (Math.ceil(getNrOfLaunchedVMs() * getActualMaxUsage(now)) <= max) {
 			// launch as many VMs as needed to fulfill the 60% usage
-			int VMsNeeded = (int) Math.ceil((double) max / MAX_USAGE);
+			int VMsNeeded = (int) Math.ceil((double) max / getActualMaxUsage(now));
 			for (int i = 0; i < VMsNeeded - getNrOfLaunchedVMs(); i++) {
 				Date launchDate = addDate(now, 1);
 				launchVM(launchDate);
 			}
 		}
-		if (Math.ceil(getNrOfLaunchedVMs() * MIN_USAGE) >= max
+		if (Math.ceil(getNrOfLaunchedVMs() * getActualMinUsage(now)) >= max
 				&& getNrOfLaunchedVMs() > 3) {
-			int VMsNeeded = Math.max((int) Math.ceil((double) max / MAX_USAGE),
+			int VMsNeeded = Math.max((int) Math.ceil((double) max / getActualMaxUsage(now)),
 					3);
 			for (int i = 0; i < getNrOfLaunchedVMs() - VMsNeeded; i++) {
 				nominateToTermination(addDate(now, 1));
@@ -69,26 +66,41 @@ public abstract class MachineStrategy {
 			PriorityQueue<UsageStatistics> statsQueue) {
 		SimpleRegression regression = leastSquares.createRegression(statsQueue);
 		double forecast = leastSquares.getForecast(regression,
-				statsQueue.size() + FORECAST_DISTANCE);
+				statsQueue.size() + getActualForecastDistance(now));
 		// System.out.println("busy: " + manager.getBusyMachines(now) +
 		// " predict: " + forecast + " launched: " + manager.launchedVMs);
 
-		if (Math.ceil(getNrOfLaunchedVMs() * MAX_USAGE) <= forecast) {
+		if (Math.ceil(getNrOfLaunchedVMs() * getActualMaxUsage(now)) <= forecast) {
 			// launch as many VMs as needed to fulfill the 60% usage
-			int VMsNeeded = (int) Math.ceil((double) forecast / MAX_USAGE);
+			int VMsNeeded = (int) Math.ceil((double) forecast / getActualMaxUsage(now));
 			for (int i = 0; i < VMsNeeded - getNrOfLaunchedVMs(); i++) {
 				launchVM(addDate(now, 1));
 			}
 		}
-		if (Math.ceil(getNrOfLaunchedVMs() * MIN_USAGE) >= forecast
+		if (Math.ceil(getNrOfLaunchedVMs() * getActualMinUsage(now)) >= forecast
 				&& getNrOfLaunchedVMs() > 5) {
 			int VMsNeeded = Math.max(
-					(int) Math.ceil((double) forecast / MAX_USAGE), 5);
+					////biztos hogy max kell ide????????
+					(int) Math.ceil((double) forecast / getActualMaxUsage(now)), 5);
 			for (int i = 0; i < getNrOfLaunchedVMs() - VMsNeeded; i++) {
 				nominateToTermination(addDate(now, 1));
 			}
 		}
 	}
+	
+	
+	public int getIndexToDate(Date date)
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return calendar.get(Calendar.HOUR_OF_DAY);
+	}
+	
+	protected abstract int getActualForecastDistance(Date date);
+
+	protected abstract double getActualMinUsage(Date date);
+
+	protected abstract double getActualMaxUsage(Date date);
 
 	protected abstract int getNrOfLaunchedVMs();
 

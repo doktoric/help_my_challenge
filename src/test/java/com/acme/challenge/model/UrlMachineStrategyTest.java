@@ -13,44 +13,49 @@ import com.acme.challenge.simulation.SimulatedMachine;
 
 public class UrlMachineStrategyTest {
 
-	
 	MachineStrategy underTest;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
+
 	@Before
-	public void setUp() throws ParseException{
-	
-		underTest=new UrlMachineStrategy(QueueType.URL);
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:54:52"), dateFormat.parse("2013-03-01 00:00:52")));
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:52"), dateFormat.parse("2013-03-01 00:00:52")));
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:58:52"), dateFormat.parse("2013-03-01 00:00:52")));
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:45"), dateFormat.parse("2013-03-01 00:00:52")));
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:52"), dateFormat.parse("2013-03-01 00:00:52")));
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:51"), dateFormat.parse("2013-03-01 00:00:52")));
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:47"), dateFormat.parse("2013-03-01 00:00:52")));
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:53"), dateFormat.parse("2013-03-01 00:00:52")));
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:55"), dateFormat.parse("2013-03-01 00:00:52")));
-		underTest.addSimulatedMachine(new SimulatedMachine(dateFormat.parse("2013-03-01 00:59:32"), dateFormat.parse("2013-03-01 00:00:52")));
-		
-		underTest.launchedVMs=10; 
+	public void setUp() throws ParseException {
+		underTest = new UrlMachineStrategy(null, QueueType.URL);
+
 	}
-	
+
 	@Test
-	public void testWithTerminatingWith7VM() throws ParseException {
-		underTest.terminateMachine(dateFormat.parse("2013-03-01 00:59:59"), 7);
-		Assert.assertEquals(new Integer(7), underTest.launchedVMs);
+	public void testgetForecast1() throws ParseException {
+		Assert.assertEquals(120, underTest.getActualForecastDistance(dateFormat
+				.parse("2013-03-01 00:23:59")));
 	}
-	
+
 	@Test
-	public void testWithTerminatingWith9VM() throws ParseException {
-		underTest.terminateMachine(dateFormat.parse("2013-03-01 00:59:59"), 9);
-		Assert.assertEquals(new Integer(9), underTest.launchedVMs);
+	public void testgetForecast2() throws ParseException {
+		Assert.assertEquals(120, underTest.getActualForecastDistance(dateFormat
+				.parse("2013-03-01 00:59:59")));
 	}
-	
+
 	@Test
-	public void testWithTerminatingWith9VMButFalseTime() throws ParseException {
-		underTest.terminateMachine(dateFormat.parse("2013-03-02 00:59:59"), 9);
-		Assert.assertEquals(new Integer(10), underTest.launchedVMs);
+	public void testgetMax1() throws ParseException {
+		Assert.assertEquals(0.6, underTest.getActualMaxUsage(dateFormat
+				.parse("2013-03-01 00:23:59")));
+	}
+
+	@Test
+	public void testgetMax2() throws ParseException {
+		Assert.assertEquals(0.6, underTest.getActualMaxUsage(dateFormat
+				.parse("2013-03-01 00:59:59")));
+	}
+
+	@Test
+	public void testgetMin1() throws ParseException {
+		Assert.assertEquals(0.4, underTest.getActualMinUsage(dateFormat
+				.parse("2013-03-01 00:23:59")));
+	}
+
+	@Test
+	public void testgetMin2() throws ParseException {
+		Assert.assertEquals(0.4, underTest.getActualMinUsage(dateFormat
+				.parse("2013-03-01 00:59:59")));
 	}
 
 }
