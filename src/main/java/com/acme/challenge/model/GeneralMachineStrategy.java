@@ -12,6 +12,7 @@ public class GeneralMachineStrategy extends MachineStrategy {
 
 	private GeneralMachineStrategy(QueueType type) {
 		this.type = type;
+		manager=new SimulatedMachineManager(QueueType.GENERAL);
 	}
 
 	public static MachineStrategy generalMachineStrategy(QueueType type) {

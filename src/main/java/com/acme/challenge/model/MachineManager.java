@@ -1,4 +1,4 @@
-package com.acme.challenge;
+package com.acme.challenge.model;
 
 import static com.acme.challenge.model.ExportMachineStrategy.exportMachineStrategy;
 import static com.acme.challenge.model.GeneralMachineStrategy.generalMachineStrategy;
@@ -6,11 +6,11 @@ import static com.acme.challenge.model.UrlMachineStrategy.urlMachineStrategy;
 
 import java.util.Date;
 
+import com.acme.challenge.OutputWriter;
 import com.acme.challenge.base.Job;
 import com.acme.challenge.base.QueueType;
-import com.acme.challenge.model.MachineStrategy;
 
-public class SimulatedMachineManager {
+public class MachineManager {
 
 	private static final int INITIAL_MACHINE_COUNT = 3;
 
@@ -51,13 +51,13 @@ public class SimulatedMachineManager {
 		// simulate virtual machine usage for every queue
 		switch (job.getQueueType()) {
 		case URL:
-			urlMachineStrategy.simulateVMLoad(job);
+			urlMachineStrategy.manager.simulateVMLoad(job);
 			break;
 		case GENERAL:
-			generalMachineStrategy.simulateVMLoad(job);
+			generalMachineStrategy.manager.simulateVMLoad(job);
 			break;
 		case EXPORT:
-			exportMachineStrategy.simulateVMLoad(job);
+			exportMachineStrategy.manager.simulateVMLoad(job);
 			break;
 		}
 		OutputWriter.writeJob(job.getJobOutput());

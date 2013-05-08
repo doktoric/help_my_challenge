@@ -8,12 +8,13 @@ import java.util.Scanner;
 
 import com.acme.challenge.base.Job;
 import com.acme.challenge.base.QueueType;
+import com.acme.challenge.model.MachineManager;
 
 public class LogParser {
 
-	private SimulatedMachineManager machineManager;
+	private MachineManager machineManager;
 
-	public LogParser(SimulatedMachineManager machineManager) {
+	public LogParser(MachineManager machineManager) {
 		super();
 		this.machineManager = machineManager;
 	}

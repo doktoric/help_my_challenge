@@ -12,6 +12,7 @@ public class ExportMachineStrategy extends MachineStrategy {
 
 	private ExportMachineStrategy(QueueType type) {
 		this.type = type;
+		manager=new SimulatedMachineManager(QueueType.EXPORT);
 	}
 
 	public static MachineStrategy exportMachineStrategy(QueueType type) {

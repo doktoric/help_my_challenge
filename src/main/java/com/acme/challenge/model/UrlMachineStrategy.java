@@ -13,9 +13,11 @@ public class UrlMachineStrategy extends MachineStrategy {
 	public UrlMachineStrategy(QueueType type) {
 
 		this.type = type;
+		manager=new SimulatedMachineManager(QueueType.URL);
 	}
 
 	public static MachineStrategy urlMachineStrategy(QueueType type) {
+		
 		return new UrlMachineStrategy(type);
 	}
 
