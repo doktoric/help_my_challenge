@@ -90,15 +90,17 @@ public abstract class MachineStrategy {
 					3);
 			for (int i = 0; i < launchedVMs - VMsNeeded; i++) {
 				Date launchDate = addDate(now, 1);
-				terminateMachine(launchDate);
+				terminateMachine(launchDate, VMsNeeded);
 			}
 		}
 	}
 
 	public void processStatisticsQueueVersion1(Date now) {
 		SimpleRegression regression = leastSquares.createRegression(statsQueue);
-		double forecast = leastSquares.getForecast(regression,	statsQueue.size() + FORECAST_DISTANCE);
-//		System.out.println("busy: " + getBusyMachines(now) + " predict: " + forecast + " launched: " + launchedVMs);
+		double forecast = leastSquares.getForecast(regression,
+				statsQueue.size() + FORECAST_DISTANCE);
+		System.out.println("busy: " + getBusyMachines(now) + " predict: "
+				+ forecast + " launched: " + launchedVMs);
 
 		if (Math.ceil(launchedVMs * MAX_USAGE) <= forecast) {
 			// launch as many VMs as needed to fulfill the 60% usage
@@ -108,10 +110,11 @@ public abstract class MachineStrategy {
 			}
 		}
 		if (Math.ceil(launchedVMs * MIN_USAGE) >= forecast && launchedVMs > 5) {
-			int VMsNeeded = Math.max((int) Math.ceil((double) forecast / MAX_USAGE), 5);
-			for (int i = 0; i < launchedVMs - VMsNeeded; i++) {
-				terminateMachine(addDate(now, 1));
-			}
+			int VMsNeeded = Math.max(
+					(int) Math.ceil((double) forecast / MAX_USAGE), 5);
+			// for (int i = 0; i < launchedVMs - VMsNeeded; i++) {
+			terminateMachine(addDate(now, 1), VMsNeeded);
+			// }
 		}
 	}
 
@@ -127,15 +130,27 @@ public abstract class MachineStrategy {
 		OutputWriter.writeVMCommand(date, Command.LAUNCH, type);
 	}
 
-	public void terminateMachine(Date date) {
-		decreaseVmSize();
-		OutputWriter.writeVMCommand(date, Command.TERMINATE, type);
+	public void terminateMachine(Date date, int VMsNeeded) {
+		// TODO Auto-generated method stub
+		for (SimulatedMachine machine : machines) {
+			long diff = date.getTime() - machine.getActiveFrom().getTime();
+			System.out.println("now:" + date);
+			System.out.println("active from:"
+					+ machine.getActiveFrom());
+			if (VMsNeeded < launchedVMs && isInTerminateTime(diff)) {
+				decreaseVmSize();
+				OutputWriter.writeVMCommand(date, Command.TERMINATE, type);
+			}
+		}
+
 	}
+
+	protected abstract boolean isInTerminateTime(long diff);
 
 	public void simulateVMLoad(Job job) {
 		boolean foundAvailableMachine = hasFoundAvailableMachine(job);
 		if (!foundAvailableMachine) {
-			// System.out.println("No available machine on "+type.toString());
+			System.out.println("No available machine on " + type.toString());
 			Date jobDate = job.getDateTime();
 			Date busyTill = addDate(jobDate, job.getRuntimeInSeconds());
 			SimulatedMachine simulatedMachine = new SimulatedMachine(jobDate,
