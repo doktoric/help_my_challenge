@@ -1,4 +1,4 @@
-package com.acme.challenge.model;
+package com.acme.challenge.simulation;
 
 import java.util.Date;
 

@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.acme.challenge.base.QueueType;
+import com.acme.challenge.simulation.SimulatedMachine;
 
 public class UrlMachineStrategyTest {
 

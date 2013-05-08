@@ -8,15 +8,15 @@ import java.util.Scanner;
 
 import com.acme.challenge.base.Job;
 import com.acme.challenge.base.QueueType;
-import com.acme.challenge.model.MachineManager;
+import com.acme.challenge.processor.JobProcessor;
 
 public class LogParser {
 
-	private MachineManager machineManager;
+	private JobProcessor jobProcessor;
 
-	public LogParser(MachineManager machineManager) {
+	public LogParser(JobProcessor jobProcessor) {
 		super();
-		this.machineManager = machineManager;
+		this.jobProcessor = jobProcessor;
 	}
 
 	public Job parseLine(String line) {
@@ -48,14 +48,9 @@ public class LogParser {
 		Scanner input;
 		try {
 			input = new Scanner(file);
-			int lineNumber = 0;
 			while (input.hasNext()) {
 				Job job = parseLine(input.nextLine());
-				if (lineNumber == 0) {
-					machineManager.launchInitialMachines(job.getDateTime());
-				}
-				machineManager.processJob(job);
-				lineNumber++;
+				jobProcessor.processJob(job);
 			}
 			input.close();
 		} catch (FileNotFoundException e) {

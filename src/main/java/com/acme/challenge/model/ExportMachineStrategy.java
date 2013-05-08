@@ -2,21 +2,18 @@ package com.acme.challenge.model;
 
 import java.util.Date;
 
-import com.acme.challenge.OutputWriter;
-import com.acme.challenge.base.Command;
 import com.acme.challenge.base.QueueType;
 
 public class ExportMachineStrategy extends MachineStrategy {
 
 	private Integer END_OF_HOUR = 6000;
 
-	private ExportMachineStrategy(QueueType type) {
-		this.type = type;
-		manager=new SimulatedMachineManager(QueueType.EXPORT);
+	private ExportMachineStrategy(MachineManager machineManager, QueueType type) {
+		super(machineManager, type);
 	}
 
-	public static MachineStrategy exportMachineStrategy(QueueType type) {
-		return new ExportMachineStrategy(type);
+	public static MachineStrategy exportMachineStrategy(MachineManager machineManager, QueueType type) {
+		return new ExportMachineStrategy(machineManager, type);
 	}
 
 	@Override
@@ -26,6 +23,18 @@ public class ExportMachineStrategy extends MachineStrategy {
 		return isTerminated;
 	}
 
-	
+	@Override
+	protected int getNrOfLaunchedVMs() {
+		return machineManager.nrOfActiveExportMachines();
+	}
 
+	@Override
+	protected void launchVM(Date date) {
+		machineManager.launchMachine(date, QueueType.EXPORT);
+	}
+
+	@Override
+	protected void nominateToTermination(Date date) {
+		machineManager.terminateIfNearBilling(date, QueueType.EXPORT);
+	}
 }
