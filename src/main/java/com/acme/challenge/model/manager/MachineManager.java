@@ -30,47 +30,88 @@ public class MachineManager {
 		urlMachines.add(new Machine(date));
 		OutputWriter.writeVMCommand(date, Command.LAUNCH, QueueType.URL);
 	}
-	
+
 	public void launchGeneralMachine(Date date) {
 		generalMachines.add(new Machine(date));
 		OutputWriter.writeVMCommand(date, Command.LAUNCH, QueueType.GENERAL);
 	}
-	
+
 	public void launchExportMachine(Date date) {
 		exportMachines.add(new Machine(date));
 		OutputWriter.writeVMCommand(date, Command.LAUNCH, QueueType.EXPORT);
 	}
-	
-	//TODO:
-	public void terminateUrlMachine(Date date) {
-//		urlMachines.remove(getTerminateMachine(date));
+
+	private void terminateUrlMachine(Date date, Machine machine) {
+		urlMachines.remove(machine);
 		OutputWriter.writeVMCommand(date, Command.TERMINATE, QueueType.URL);
 	}
-	
-	public void terminateGeneralMachine(Date date) {
-//		generalMachines.remove(getTerminateMachine(date));
+
+	private void terminateGeneralMachine(Date date, Machine machine) {
+		generalMachines.remove(machine);
 		OutputWriter.writeVMCommand(date, Command.TERMINATE, QueueType.GENERAL);
 	}
-	
-	public void terminateExportMachine(Date date) {
-//		exportMachines.remove(getTerminateMachine(date));
+
+	private void terminateExportMachine(Date date, Machine machine) {
+		exportMachines.remove(machine);
 		OutputWriter.writeVMCommand(date, Command.TERMINATE, QueueType.EXPORT);
 	}
 
-	//ez nem jo mert csak azt nezi hogy milyen regota van elinditva, nem pedig a szamlazasig az idot
-	//kell bele egy modulo azt hiszem
-	// private Machine getTerminateMachine(Date now) {
-	// Machine mostClosestMachine = machines.get(0);
-	// for (Machine machine : machines) {
-	// long diff = now.getTime() - machine.getActiveFrom().getTime();
-	// long mostClosestDiff = now.getTime()
-	// - mostClosestMachine.getActiveFrom().getTime();
-	// if (diff < mostClosestDiff)
-	// mostClosestMachine = machine;
-	// }
-	//
-	// return mostClosestMachine;
-	// }
+	public void terminateUrlMachinesNearBillingTime(Date date, int seconds, int maxNrToTerminate) {
+		Machine machine = closestToBillingMachine(QueueType.URL, date, seconds);
+		while (machine != null && maxNrToTerminate > 0) {
+			terminateUrlMachine(date, machine);
+			machine = closestToBillingMachine(QueueType.URL, date, seconds);
+			maxNrToTerminate--;
+		} 
+	}
+	
+	public void terminateGeneralMachinesNearBillingTime(Date date, int seconds, int maxNrToTerminate) {
+		Machine machine = closestToBillingMachine(QueueType.GENERAL, date, seconds);
+		while (machine != null && maxNrToTerminate > 0) {
+			terminateGeneralMachine(date, machine);
+			machine = closestToBillingMachine(QueueType.GENERAL, date, seconds);
+			maxNrToTerminate--;
+		} 
+	}
+	
+	public void terminateExportMachinesNearBillingTime(Date date, int seconds, int maxNrToTerminate) {
+		Machine machine = closestToBillingMachine(QueueType.EXPORT, date, seconds);
+		while (machine != null && maxNrToTerminate > 0) {
+			terminateExportMachine(date, machine);
+			machine = closestToBillingMachine(QueueType.EXPORT, date, seconds);
+			maxNrToTerminate--;
+		} 
+	}
+
+	protected Machine closestToBillingMachine(QueueType type, Date date, int seconds) {
+		List<Machine> machines = getMachineList(type);
+		int minimumTillBilling = seconds;
+		Machine closestMachine = null;
+		for (Machine machine : machines) {
+			int tillBilling = machine.secondsTillBilling(date);
+			if (tillBilling < minimumTillBilling) {
+				minimumTillBilling = tillBilling;
+				closestMachine = machine;
+			}
+		}
+		return closestMachine;
+	}
+
+	private List<Machine> getMachineList(QueueType type) {
+		List<Machine> ret = null;
+		switch (type) {
+		case URL:
+			ret = urlMachines;
+			break;
+		case GENERAL:
+			ret = generalMachines;
+			break;
+		case EXPORT:
+			ret = exportMachines;
+			break;
+		}
+		return ret;
+	}
 
 	public int nrOfActiveUrlMachines() {
 		return urlMachines.size();
@@ -84,4 +125,11 @@ public class MachineManager {
 		return generalMachines.size();
 	}
 
+	protected List<Machine> getUrlMachines() {
+		return urlMachines;
+	}
+	
+	protected void setUrlMachines(List<Machine> urlMachines) {
+		this.urlMachines = urlMachines;
+	}
 }

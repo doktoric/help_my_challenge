@@ -39,28 +39,25 @@ public abstract class ScalingStrategy {
 		}
 		if (Math.ceil(getNrOfLaunchedVMs() * getActualMinUsage(now)) >= max && getNrOfLaunchedVMs() > 3) {
 			int VMsNeeded = Math.max((int) Math.ceil((double) max / getActualMaxUsage(now)), 3);
-			for (int i = 0; i < getNrOfLaunchedVMs() - VMsNeeded; i++) {
-				nominateToTermination(addDate(now, 1));
-			}
+			int maxNrOfVMsToTerminate = getNrOfLaunchedVMs() - VMsNeeded;
+			nominateToTermination(now, maxNrOfVMsToTerminate);
 		}
 	}
 
 	public void processStatisticsQueueVersion1(Date now, PriorityQueue<UsageStatistics> statsQueue) {
 		SimpleRegression regression = leastSquares.createRegression(statsQueue);
-		double forecast = leastSquares.getForecast(regression, statsQueue.size() + getActualForecastDistance(now));		
+		double forecast = leastSquares.getForecast(regression, statsQueue.size() + getActualForecastDistance(now));
 
-		if (Math.ceil(getNrOfLaunchedVMs() * getActualMaxUsage(now)) <= forecast) {			 
+		if (Math.ceil(getNrOfLaunchedVMs() * getActualMaxUsage(now)) <= forecast) {
 			int VMsNeeded = (int) Math.ceil((double) forecast / getActualMaxUsage(now));
 			for (int i = 0; i < VMsNeeded - getNrOfLaunchedVMs(); i++) {
 				launchVM(now);
 			}
 		}
 		if (Math.ceil(getNrOfLaunchedVMs() * getActualMinUsage(now)) >= forecast && getNrOfLaunchedVMs() > minimumMachineCount()) {
-			int VMsNeeded = Math.max(
-					(int) Math.ceil((double) forecast / getActualMaxUsage(now)), minimumMachineCount());
-			for (int i = 0; i < getNrOfLaunchedVMs() - VMsNeeded; i++) {
-				nominateToTermination(now);
-			}
+			int VMsNeeded = Math.max((int) Math.ceil((double) forecast / getActualMaxUsage(now)), minimumMachineCount());
+			int maxNrOfVMsToTerminate = getNrOfLaunchedVMs() - VMsNeeded;
+			nominateToTermination(now, maxNrOfVMsToTerminate);
 		}
 	}
 
@@ -77,14 +74,14 @@ public abstract class ScalingStrategy {
 	protected abstract double getActualMinUsage(Date date);
 
 	protected abstract double getActualMaxUsage(Date date);
-	
+
 	protected abstract int minimumMachineCount();
 
 	protected abstract int getNrOfLaunchedVMs();
 
 	protected abstract void launchVM(Date date);
 
-	protected abstract void nominateToTermination(Date date);
+	protected abstract void nominateToTermination(Date date, int maxNrToTerminate);
 
 	protected abstract boolean isInTerminateTime(long diff);
 

@@ -39,8 +39,8 @@ public class UrlQueueScalingStrategy extends ScalingStrategy {
 	}
 
 	@Override
-	protected void nominateToTermination(Date date) {
-		machineManager.terminateUrlMachine(date);
+	protected void nominateToTermination(Date date, int maxNrToTerminate) {
+		machineManager.terminateUrlMachinesNearBillingTime(date, END_OF_HOUR, maxNrToTerminate);
 	}
 
 	public static final double[] MAX_USAGE = { 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,

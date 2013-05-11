@@ -39,8 +39,8 @@ public class GeneralQueueScalingStrategy extends ScalingStrategy {
 	}
 
 	@Override
-	protected void nominateToTermination(Date date) {
-		machineManager.terminateGeneralMachine(date);
+	protected void nominateToTermination(Date date, int maxNrToTerminate) {
+		machineManager.terminateGeneralMachinesNearBillingTime(date, END_OF_HOUR, maxNrToTerminate);
 	}
 
 	public static final double[] MAX_USAGE = { 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,

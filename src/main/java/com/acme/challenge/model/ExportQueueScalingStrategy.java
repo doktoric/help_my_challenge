@@ -39,8 +39,8 @@ public class ExportQueueScalingStrategy extends ScalingStrategy {
 	}
 
 	@Override
-	protected void nominateToTermination(Date date) {
-		machineManager.terminateExportMachine(date);
+	protected void nominateToTermination(Date date, int maxNrToTerminate) {
+		machineManager.terminateExportMachinesNearBillingTime(date, END_OF_HOUR, maxNrToTerminate);
 	}
 
 	public static final double[] MAX_USAGE = { 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
