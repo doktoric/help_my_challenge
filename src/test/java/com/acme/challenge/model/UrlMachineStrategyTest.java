@@ -8,17 +8,14 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.acme.challenge.base.QueueType;
-import com.acme.challenge.simulation.SimulatedMachine;
-
 public class UrlMachineStrategyTest {
 
-	MachineStrategy underTest;
+	ScalingStrategy underTest;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Before
 	public void setUp() throws ParseException {
-		underTest = new UrlMachineStrategy(null, QueueType.URL);
+		underTest = UrlQueueScalingStrategy.getInstance();
 
 	}
 

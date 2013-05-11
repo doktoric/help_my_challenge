@@ -9,57 +9,79 @@ import com.acme.challenge.base.Command;
 import com.acme.challenge.base.Machine;
 import com.acme.challenge.base.QueueType;
 
-public abstract class MachineManager {
+public class MachineManager {
 
-	private static final int INITIAL_MACHINE_COUNT = 3;
+	private MachineManager() {
+	}
 
-	protected QueueType type;
+	private static class MachineManagerHolder {
+		public static final MachineManager INSTANCE = new MachineManager();
+	}
 
-	private List<Machine> machines = new ArrayList<Machine>();
+	public static MachineManager getInstance() {
+		return MachineManagerHolder.INSTANCE;
+	}
 
-	// public void terminateMachine(Date date, int VMsNeeded, QueueType type) {
-	// // TODO Auto-generated method stub
-	// for (SimulatedMachine machine : manager.simulatedMachines) {
-	// long diff = date.getTime() - machine.getActiveFrom().getTime();
-	// System.out.println("now:" + date);
-	// System.out.println("active from:" + machine.getActiveFrom());
-	// if (VMsNeeded < manager.launchedVMs && isInTerminateTime(diff)) {
-	// manager.decreaseVmSize();
-	// OutputWriter.writeVMCommand(date, Command.TERMINATE, type);
+	private List<Machine> urlMachines = new ArrayList<Machine>();
+	private List<Machine> generalMachines = new ArrayList<Machine>();
+	private List<Machine> exportMachines = new ArrayList<Machine>();
+
+	public void launchUrlMachine(Date date) {
+		urlMachines.add(new Machine(date));
+		OutputWriter.writeVMCommand(date, Command.LAUNCH, QueueType.URL);
+	}
+	
+	public void launchGeneralMachine(Date date) {
+		generalMachines.add(new Machine(date));
+		OutputWriter.writeVMCommand(date, Command.LAUNCH, QueueType.GENERAL);
+	}
+	
+	public void launchExportMachine(Date date) {
+		exportMachines.add(new Machine(date));
+		OutputWriter.writeVMCommand(date, Command.LAUNCH, QueueType.EXPORT);
+	}
+	
+	//TODO:
+	public void terminateUrlMachine(Date date) {
+//		urlMachines.remove(getTerminateMachine(date));
+		OutputWriter.writeVMCommand(date, Command.TERMINATE, QueueType.URL);
+	}
+	
+	public void terminateGeneralMachine(Date date) {
+//		generalMachines.remove(getTerminateMachine(date));
+		OutputWriter.writeVMCommand(date, Command.TERMINATE, QueueType.GENERAL);
+	}
+	
+	public void terminateExportMachine(Date date) {
+//		exportMachines.remove(getTerminateMachine(date));
+		OutputWriter.writeVMCommand(date, Command.TERMINATE, QueueType.EXPORT);
+	}
+
+	//ez nem jo mert csak azt nezi hogy milyen regota van elinditva, nem pedig a szamlazasig az idot
+	//kell bele egy modulo azt hiszem
+	// private Machine getTerminateMachine(Date now) {
+	// Machine mostClosestMachine = machines.get(0);
+	// for (Machine machine : machines) {
+	// long diff = now.getTime() - machine.getActiveFrom().getTime();
+	// long mostClosestDiff = now.getTime()
+	// - mostClosestMachine.getActiveFrom().getTime();
+	// if (diff < mostClosestDiff)
+	// mostClosestMachine = machine;
 	// }
+	//
+	// return mostClosestMachine;
 	// }
-	// }
 
-	protected abstract void launchInitialMachines(Date dateTime);
-
-	public void launchMachine(Date date) {
-		machines.add(new Machine(date));
-		OutputWriter.writeVMCommand(date, Command.LAUNCH, type);
+	public int nrOfActiveUrlMachines() {
+		return urlMachines.size();
 	}
 
-	// TODO: implement terminate
-	public void terminateIfNearBilling(Date date) {
-
-		machines.remove(getTerminateMachine(date));
-		OutputWriter.writeVMCommand(date, Command.TERMINATE, type);
+	public int nrOfActiveExportMachines() {
+		return exportMachines.size();
 	}
 
-	private Machine getTerminateMachine(Date now) {
-		Machine mostClosestMachine = machines.get(0);
-		for (Machine machine : machines) {
-			long diff = now.getTime() - machine.getActiveFrom().getTime();
-			long mostClosestDiff = now.getTime()
-					- mostClosestMachine.getActiveFrom().getTime();
-			if (diff < mostClosestDiff)
-				mostClosestMachine = machine;
-		}
-
-		return mostClosestMachine;
+	public int nrOfActiveGeneralMachines() {
+		return generalMachines.size();
 	}
-
-	public int nrOfActiveMachines() {
-		return machines.size();
-	}
-
 
 }

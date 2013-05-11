@@ -19,7 +19,7 @@ public class LeastSquaresTest {
 	
 	@Before
 	public void setUp(){
-		underTest=new LeastSquares();
+		underTest=LeastSquares.getInstance();
 		statsQueue=new PriorityQueue<UsageStatistics>();
 		Calendar cal = Calendar.getInstance();
 		cal.set(2009, Calendar.DECEMBER, 7);

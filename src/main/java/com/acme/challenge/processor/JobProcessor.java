@@ -1,64 +1,70 @@
 package com.acme.challenge.processor;
 
-import static com.acme.challenge.model.ExportMachineStrategy.exportMachineStrategy;
-import static com.acme.challenge.model.GeneralMachineStrategy.generalMachineStrategy;
-import static com.acme.challenge.model.UrlMachineStrategy.urlMachineStrategy;
-import static com.acme.challenge.model.manager.UrlMachineManager.urlMachineManager;
-import static com.acme.challenge.model.manager.ExportMachineManager.exportMachineManager;
-import static com.acme.challenge.model.manager.GeneralMachineManager.generalMachineManager;
-
 import java.util.Date;
 
 import com.acme.challenge.OutputWriter;
 import com.acme.challenge.base.Job;
-import com.acme.challenge.base.QueueType;
-import com.acme.challenge.model.MachineStrategy;
-import com.acme.challenge.model.manager.MachineManager;
-import com.acme.challenge.simulation.SimulatedMachineManager;
+import com.acme.challenge.model.ExportQueueScalingStrategy;
+import com.acme.challenge.model.GeneralQueueScalingStrategy;
+import com.acme.challenge.model.ScalingStrategy;
+import com.acme.challenge.model.UrlQueueScalingStrategy;
+import com.acme.challenge.simulation.VirtualLoadSimulator;
 
 public class JobProcessor {
 	
-	private SimulatedMachineManager simulatedMachineManager;
+	private JobProcessor(){}
 	
-	MachineStrategy urlMachineStrategy = urlMachineStrategy(urlMachineManager());
-	MachineStrategy generalMachineStrategy = generalMachineStrategy(generalMachineManager());
-	MachineStrategy exportMachineStrategy = exportMachineStrategy(exportMachineManager());
-	
-	private int processedJobs = 0;
-	private Date currentBlock = null;
-
-	public JobProcessor(SimulatedMachineManager simulatedMachineManager) {
-		this.simulatedMachineManager = simulatedMachineManager;
+	private static class JobProcessorHolder { 
+        public static final JobProcessor INSTANCE = new JobProcessor();
 	}
-
+	
+	public static JobProcessor getInstance() {
+        return JobProcessorHolder.INSTANCE;
+	}
+	
+	ScalingStrategy urlMachineStrategy = UrlQueueScalingStrategy.getInstance();
+	ScalingStrategy generalMachineStrategy = GeneralQueueScalingStrategy.getInstance();
+	ScalingStrategy exportMachineStrategy = ExportQueueScalingStrategy.getInstance();
+	
+	private Date currentSecond = null;
 
 	public void processJob(Job job) {
-		if (processedJobs == 0) {
-			urlMachineStrategy.getMachineManager().launchMachine(job.getDateTime());
-			exportMachineStrategy.getMachineManager().launchMachine(job.getDateTime());
-			generalMachineStrategy.getMachineManager().launchMachine(job.getDateTime());
+		VirtualLoadSimulator simulatedMachineManager = VirtualLoadSimulator.getInstance();
+		
+		if (firstJobToProcess()) {
+			launchInitialMachines(job);
+			currentSecond = job.getDateTime();
 		}
 		
 		simulatedMachineManager.simulateVMLoad(job);
-		
-		if (currentBlock == null) {
-			currentBlock = job.getDateTime();
-		}
-		// in case of new block (new second in logfile) create statistics
-		if (currentBlock.getTime() != job.getDateTime().getTime()) {
-			currentBlock = job.getDateTime();
-			simulatedMachineManager.updateStatistics(currentBlock);
+			
+		if (parsedEveryJobInPreviousSecond(job)) {
+			simulatedMachineManager.updateStatistics(currentSecond);
+			currentSecond = job.getDateTime();
+			processStatistics(simulatedMachineManager);
 		}
 		
-		processStatistics();
 		OutputWriter.writeJob(job.getJobOutput());
-		processedJobs++;
 	}
 
 
-	private void processStatistics() {
-		urlMachineStrategy.processStatisticsQueueVersion1(currentBlock, simulatedMachineManager.getUrlStatsQueue());
-		generalMachineStrategy.processStatisticsQueueVersion1(currentBlock, simulatedMachineManager.getGeneralStatsQueue());
-		exportMachineStrategy.processStatisticsQueueVersion1(currentBlock, simulatedMachineManager.getExportStatsQueue());
+	private boolean parsedEveryJobInPreviousSecond(Job job) {
+		return currentSecond.getTime() != job.getDateTime().getTime();
+	}
+
+	private boolean firstJobToProcess() {
+		return currentSecond == null;
+	}
+
+	private void launchInitialMachines(Job job) {
+		urlMachineStrategy.launchInitialMachines(job.getDateTime());
+		exportMachineStrategy.launchInitialMachines(job.getDateTime());
+		generalMachineStrategy.launchInitialMachines(job.getDateTime());
+	}
+
+	private void processStatistics(VirtualLoadSimulator simulatedMachineManager) {
+		urlMachineStrategy.processStatisticsQueueVersion1(currentSecond, simulatedMachineManager.getUrlStatsQueue());
+		generalMachineStrategy.processStatisticsQueueVersion1(currentSecond, simulatedMachineManager.getGeneralStatsQueue());
+		exportMachineStrategy.processStatisticsQueueVersion1(currentSecond, simulatedMachineManager.getExportStatsQueue());
 	}
 }

@@ -12,11 +12,14 @@ import com.acme.challenge.processor.JobProcessor;
 
 public class LogParser {
 
-	private JobProcessor jobProcessor;
-
-	public LogParser(JobProcessor jobProcessor) {
-		super();
-		this.jobProcessor = jobProcessor;
+	private LogParser(){}
+	
+	private static class LogParserHolder { 
+        public static final LogParser INSTANCE = new LogParser();
+	}
+	
+	public static LogParser getInstance() {
+        return LogParserHolder.INSTANCE;
 	}
 
 	public Job parseLine(String line) {
@@ -50,7 +53,7 @@ public class LogParser {
 			input = new Scanner(file);
 			while (input.hasNext()) {
 				Job job = parseLine(input.nextLine());
-				jobProcessor.processJob(job);
+				JobProcessor.getInstance().processJob(job);
 			}
 			input.close();
 		} catch (FileNotFoundException e) {

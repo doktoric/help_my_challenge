@@ -13,9 +13,20 @@ import com.acme.challenge.base.Job;
 import com.acme.challenge.base.QueueType;
 import com.acme.challenge.base.UsageStatistics;
 
-public class SimulatedMachineManager {
+public class VirtualLoadSimulator {
 
-	public static final int MAX_QUEUE_SIZE = 3600;
+	public static final int MAX_QUEUE_SIZE = 1200;
+
+	private VirtualLoadSimulator() {
+	}
+
+	private static class SimulatedMachineManagerHolder {
+		public static final VirtualLoadSimulator INSTANCE = new VirtualLoadSimulator();
+	}
+
+	public static VirtualLoadSimulator getInstance() {
+		return SimulatedMachineManagerHolder.INSTANCE;
+	}
 
 	private List<SimulatedMachine> urlQMachines = new ArrayList<SimulatedMachine>();
 	private List<SimulatedMachine> generalQMachines = new ArrayList<SimulatedMachine>();
@@ -44,14 +55,13 @@ public class SimulatedMachineManager {
 		default:
 			break;
 		}
-		statsQueue.add(new UsageStatistics(now, getBusyMachines(now,
-				simulatedMachines)));
+		statsQueue.add(new UsageStatistics(now, getBusyMachines(now, simulatedMachines)));
 		if (statsQueue.size() > MAX_QUEUE_SIZE) {
 			statsQueue.poll();
 		}
 	}
 
-	private Integer getBusyMachines(Date now, List<SimulatedMachine> machines) {
+	public Integer getBusyMachines(Date now, List<SimulatedMachine> machines) {
 		Integer ret = 0;
 		for (SimulatedMachine machine : machines) {
 			if (machine.isBusy(now)) {
@@ -92,23 +102,17 @@ public class SimulatedMachineManager {
 		boolean foundAvailableMachine = false;
 		for (SimulatedMachine machine : randomMachines(simulatedMachines)) {
 			if (!machine.isBusy(addDate(job.getDateTime(), 5d))) {
-				machine.setBusyTill(addDate(
-						max(machine.getBusyTill(), job.getDateTime()),
-						job.getRuntimeInSeconds()));
+				machine.setBusyTill(addDate(max(machine.getBusyTill(), job.getDateTime()), job.getRuntimeInSeconds()));
 				foundAvailableMachine = true;
 				break;
 			}
 		}
 		if (!foundAvailableMachine) {
-			addMachine(
-					new SimulatedMachine(job.getDateTime(), addDate(
-							job.getDateTime(), job.getRuntimeInSeconds())),
-					job.getQueueType());
+			addMachine(new SimulatedMachine(job.getDateTime(), addDate(job.getDateTime(), job.getRuntimeInSeconds())), job.getQueueType());
 		}
 	}
 
-	private List<SimulatedMachine> randomMachines(
-			List<SimulatedMachine> machines) {
+	private List<SimulatedMachine> randomMachines(List<SimulatedMachine> machines) {
 		List<SimulatedMachine> ret = new ArrayList<SimulatedMachine>();
 		if (machines.size() > 0) {
 			int size = machines.size();

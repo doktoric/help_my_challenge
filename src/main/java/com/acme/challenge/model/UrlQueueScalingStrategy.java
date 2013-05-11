@@ -2,20 +2,23 @@ package com.acme.challenge.model;
 
 import java.util.Date;
 
-import com.acme.challenge.base.QueueType;
 import com.acme.challenge.model.manager.MachineManager;
 
-public class ExportMachineStrategy extends MachineStrategy {
+public class UrlQueueScalingStrategy extends ScalingStrategy {
 
-	private Integer END_OF_HOUR = 6000;
+	private static final int MINIMUM_MACHINE_COUNT = 5;
+	private Integer END_OF_HOUR = 10000;
 
-	private ExportMachineStrategy(MachineManager machineManager, QueueType type) {
-		super(machineManager, type);
+	private UrlQueueScalingStrategy() {
+		super(MachineManager.getInstance());
 	}
 
-	public static MachineStrategy exportMachineStrategy(
-			MachineManager machineManager) {
-		return new ExportMachineStrategy(machineManager, QueueType.EXPORT);
+	private static class UrlMachineStrategyHolder {
+		public static final UrlQueueScalingStrategy INSTANCE = new UrlQueueScalingStrategy();
+	}
+
+	public static UrlQueueScalingStrategy getInstance() {
+		return UrlMachineStrategyHolder.INSTANCE;
 	}
 
 	@Override
@@ -27,17 +30,17 @@ public class ExportMachineStrategy extends MachineStrategy {
 
 	@Override
 	protected int getNrOfLaunchedVMs() {
-		return machineManager.nrOfActiveMachines();
+		return machineManager.nrOfActiveUrlMachines();
 	}
 
 	@Override
 	protected void launchVM(Date date) {
-		machineManager.launchMachine(date);
+		machineManager.launchUrlMachine(date);
 	}
 
 	@Override
 	protected void nominateToTermination(Date date) {
-		machineManager.terminateIfNearBilling(date);
+		machineManager.terminateUrlMachine(date);
 	}
 
 	public static final double[] MAX_USAGE = { 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
@@ -63,5 +66,17 @@ public class ExportMachineStrategy extends MachineStrategy {
 	@Override
 	protected double getActualMaxUsage(Date date) {
 		return MAX_USAGE[getIndexToDate(date)];
+	}
+
+	@Override
+	public void launchInitialMachines(Date date) {
+		for (int i = 0; i < MINIMUM_MACHINE_COUNT; i++) {
+			machineManager.launchUrlMachine(date);
+		}		
+	}
+	
+	@Override
+	protected int minimumMachineCount() {
+		return MINIMUM_MACHINE_COUNT;
 	}
 }
