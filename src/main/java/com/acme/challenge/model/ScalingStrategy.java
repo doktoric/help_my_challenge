@@ -8,9 +8,11 @@ import java.util.PriorityQueue;
 
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
+import com.acme.challenge.TmpFileWriter;
 import com.acme.challenge.base.UsageStatistics;
 import com.acme.challenge.forecast.LeastSquares;
 import com.acme.challenge.model.manager.MachineManager;
+import com.acme.challenge.simulation.VirtualLoadSimulator;
 
 public abstract class ScalingStrategy {
 
@@ -45,19 +47,25 @@ public abstract class ScalingStrategy {
 	}
 
 	public void processStatisticsQueueVersion1(Date now, PriorityQueue<UsageStatistics> statsQueue) {
-		SimpleRegression regression = leastSquares.createRegression(statsQueue);
-		double forecast = leastSquares.getForecast(regression, statsQueue.size() + getActualForecastDistance(now));
+		if (statsQueue.size() == VirtualLoadSimulator.MAX_QUEUE_SIZE) {
+			SimpleRegression regression = leastSquares.createRegression(statsQueue);
+			double forecast = leastSquares.getForecast(regression, statsQueue.size() + getActualForecastDistance(now));
 
-		if (Math.ceil(getNrOfLaunchedVMs() * getActualMaxUsage(now)) <= forecast) {
-			int VMsNeeded = (int) Math.ceil((double) forecast / getActualMaxUsage(now));
-			for (int i = 0; i < VMsNeeded - getNrOfLaunchedVMs(); i++) {
-				launchVM(now);
+			int VMsNeeded;
+			if (Math.ceil(getNrOfLaunchedVMs() * getActualMaxUsage(now)) <= forecast) {
+				VMsNeeded = (int) Math.ceil((double) forecast / getActualMaxUsage(now));
+				for (int i = 0; i < VMsNeeded - getNrOfLaunchedVMs(); i++) {
+					launchVM(now);
+				}
 			}
-		}
-		if (Math.ceil(getNrOfLaunchedVMs() * getActualMinUsage(now)) >= forecast && getNrOfLaunchedVMs() > minimumMachineCount()) {
-			int VMsNeeded = Math.max((int) Math.ceil((double) forecast / getActualMaxUsage(now)), minimumMachineCount());
-			int maxNrOfVMsToTerminate = getNrOfLaunchedVMs() - VMsNeeded;
-			nominateToTermination(now, maxNrOfVMsToTerminate);
+			if (Math.ceil(getNrOfLaunchedVMs() * getActualMinUsage(now)) >= forecast && getNrOfLaunchedVMs() > minimumMachineCount()) {
+				VMsNeeded = Math.max((int) Math.ceil((double) forecast / getActualMaxUsage(now)), minimumMachineCount());
+				int maxNrOfVMsToTerminate = getNrOfLaunchedVMs() - VMsNeeded;
+				nominateToTermination(now, maxNrOfVMsToTerminate);
+			}
+			logForecast(now, getNrOfLaunchedVMs());
+		} else {
+			logForecast(now, 0);
 		}
 	}
 
@@ -66,6 +74,8 @@ public abstract class ScalingStrategy {
 		calendar.setTime(date);
 		return calendar.get(Calendar.HOUR_OF_DAY);
 	}
+
+	public abstract void logForecast(Date date, double forecast);
 
 	public abstract void launchInitialMachines(Date date);
 

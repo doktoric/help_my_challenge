@@ -15,7 +15,7 @@ import com.acme.challenge.base.UsageStatistics;
 
 public class VirtualLoadSimulator {
 
-	public static final int MAX_QUEUE_SIZE = 1200;
+	public static final int MAX_QUEUE_SIZE = 300;
 
 	private VirtualLoadSimulator() {
 	}

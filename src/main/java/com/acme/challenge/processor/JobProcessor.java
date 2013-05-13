@@ -3,6 +3,7 @@ package com.acme.challenge.processor;
 import java.util.Date;
 
 import com.acme.challenge.OutputWriter;
+import com.acme.challenge.TmpFileWriter;
 import com.acme.challenge.base.Job;
 import com.acme.challenge.model.ExportQueueScalingStrategy;
 import com.acme.challenge.model.GeneralQueueScalingStrategy;
@@ -34,6 +35,7 @@ public class JobProcessor {
 		if (firstJobToProcess()) {
 			launchInitialMachines(job);
 			currentSecond = job.getDateTime();
+			TmpFileWriter.getInstance().initFile();
 		}
 		
 		simulatedMachineManager.simulateVMLoad(job);

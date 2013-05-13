@@ -2,12 +2,13 @@ package com.acme.challenge.model;
 
 import java.util.Date;
 
+import com.acme.challenge.TmpFileWriter;
 import com.acme.challenge.model.manager.MachineManager;
 
 public class UrlQueueScalingStrategy extends ScalingStrategy {
 
 	private static final int MINIMUM_MACHINE_COUNT = 5;
-	private Integer END_OF_HOUR = 10000;
+	private Integer END_OF_HOUR = 20;
 
 	private UrlQueueScalingStrategy() {
 		super(MachineManager.getInstance());
@@ -78,5 +79,11 @@ public class UrlQueueScalingStrategy extends ScalingStrategy {
 	@Override
 	protected int minimumMachineCount() {
 		return MINIMUM_MACHINE_COUNT;
+	}
+
+	@Override
+	public void logForecast(Date date, double forecast) {
+//		TmpFileWriter.getInstance().writeline(String.valueOf(forecast));
+		
 	}
 }

@@ -7,7 +7,7 @@ import com.acme.challenge.model.manager.MachineManager;
 public class ExportQueueScalingStrategy extends ScalingStrategy {
 
 	private static final int MINIMUM_MACHINE_COUNT = 5;
-	private Integer END_OF_HOUR = 6000;
+	private Integer END_OF_HOUR = 30;
 
 	private ExportQueueScalingStrategy() {
 		super(MachineManager.getInstance());
@@ -75,5 +75,11 @@ public class ExportQueueScalingStrategy extends ScalingStrategy {
 	@Override
 	protected int minimumMachineCount() {
 		return MINIMUM_MACHINE_COUNT;
+	}
+
+	@Override
+	public void logForecast(Date date, double forecast) {
+		// TODO Auto-generated method stub
+		
 	}
 }
