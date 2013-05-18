@@ -6,7 +6,7 @@ java -cp target/classes;lib/commons-math3-3.2.jar com.acme.challenge.App | evalu
 
 or
 
-java -cp target/classes;lib/commons-math3-3.2.jar com.acme.challenge.App {300} {log-path} | evaluator.py -d
+java -cp target/classes;lib/commons-math3-3.2.jar com.acme.challenge.App {log-path} {300} | evaluator.py -d
 300: queue size [optional]
 log-path: the logs that you want to check;)
 
