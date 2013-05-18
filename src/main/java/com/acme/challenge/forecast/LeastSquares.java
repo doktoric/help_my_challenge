@@ -22,7 +22,7 @@ public class LeastSquares {
 		return LeastSquaresHolder.INSTANCE;
 	}
 
-	public SimpleRegression createRegression(PriorityQueue<UsageStatistics> statsQueue) {
+	public SimpleRegression createRegression(List<UsageStatistics> statsQueue) {
 		SimpleRegression regression = new SimpleRegression();
 		List<UsageStatistics> statsList = getSortedCollection(statsQueue);
 		int i = 0;
@@ -60,6 +60,12 @@ public class LeastSquares {
 	}
 
 	private List<UsageStatistics> getSortedCollection(PriorityQueue<UsageStatistics> statsQueue1) {
+		List<UsageStatistics> statsList = new ArrayList<UsageStatistics>(statsQueue1);
+		Collections.sort(statsList);
+		return statsList;
+	}
+	
+	private List<UsageStatistics> getSortedCollection(List<UsageStatistics> statsQueue1) {
 		List<UsageStatistics> statsList = new ArrayList<UsageStatistics>(statsQueue1);
 		Collections.sort(statsList);
 		return statsList;

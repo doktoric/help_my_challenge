@@ -129,7 +129,7 @@ public class VirtualLoadSimulator {
 	public List<UsageStatistics> getUrlStatsQueueSorted() {
 		return getSortedCollection(urlStatsQueue);
 	}
-	
+
 	public List<UsageStatistics> getLastNOfUrlStatsQueueSorted(int n) {
 		return getSortedCollection(urlStatsQueue).subList(urlStatsQueue.size()-n, urlStatsQueue.size());
 	}
@@ -137,7 +137,7 @@ public class VirtualLoadSimulator {
 	public List<UsageStatistics> getExportStatsQueueSorted() {
 		return getSortedCollection(exportStatsQueue);
 	}
-	
+
 	public List<UsageStatistics> getLastNOfExportStatsQueueSorted(int n) {
 		return getSortedCollection(exportStatsQueue).subList(exportStatsQueue.size()-n, exportStatsQueue.size());
 	}
@@ -145,11 +145,11 @@ public class VirtualLoadSimulator {
 	public List<UsageStatistics> getGeneralStatsQueueSorted() {
 		return getSortedCollection(generalStatsQueue);
 	}
-	
+
 	public List<UsageStatistics> getLastNOfGeneralStatsQueueSorted(int n) {
 		return getSortedCollection(generalStatsQueue).subList(generalStatsQueue.size()-n, generalStatsQueue.size());
 	}
-	
+
 	public List<UsageStatistics> getSortedCollection(PriorityQueue<UsageStatistics> statsQueue) {
 		List<UsageStatistics> statsList = new ArrayList<UsageStatistics>(statsQueue);
 		Collections.sort(statsList);
@@ -161,7 +161,7 @@ public class VirtualLoadSimulator {
 		updateStatisticsQueue(now, QueueType.GENERAL);
 		updateStatisticsQueue(now, QueueType.EXPORT);
 	}
-	
+
 	public void setUrlStatsQueue(PriorityQueue<UsageStatistics> urlStatsQueue) {
 		this.urlStatsQueue = urlStatsQueue;
 	}

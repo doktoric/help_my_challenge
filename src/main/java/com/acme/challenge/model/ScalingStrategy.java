@@ -63,10 +63,10 @@ public abstract class ScalingStrategy {
 				VMsNeeded = Math.max((int) Math.ceil((double) forecast / getActualMaxUsage(now)), minimumMachineCount());
 
 				//int maxNrOfVMsToTerminate = getNrOfLaunchedVMs() - VMsNeeded;
-								
+
 				Random random = new Random();
 				double rnd = random.nextDouble();
-				
+
 				int maxNrOfVMsToTerminate;
 				if (rnd>0.8){
 					maxNrOfVMsToTerminate = 1;
