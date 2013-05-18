@@ -44,9 +44,8 @@ public class UrlQueueScalingStrategy extends ScalingStrategy {
 		machineManager.terminateUrlMachinesNearBillingTime(date, END_OF_HOUR, maxNrToTerminate);
 	}
 
-	public static final double[] MAX_USAGE = { 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
-			0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
-			0.6, 0.6, 0.6, 0.6, 0.6 };
+	public static final double[] MAX_USAGE = { 4.0, 7.0, 5.0, 3.5, 4.0, 6.0, 8.0, 7.0, 7.0, 13.0, 5.0, 6.33, 5.50, 5.50, 4.0, 4.0, 4.67, 3.25, 4.33, 3.25, 4.25, 4.67,
+		5.2, 4.0 };
 	public static final double[] MIN_USAGE = { 0.4, 0.4, 0.4, 0.4, 0.4, 0.4,
 			0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4,
 			0.4, 0.4, 0.4, 0.4, 0.4 };
