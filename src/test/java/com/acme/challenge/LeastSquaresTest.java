@@ -1,6 +1,8 @@
 package com.acme.challenge;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.PriorityQueue;
 
 import junit.framework.Assert;
@@ -15,33 +17,33 @@ import com.acme.challenge.forecast.LeastSquares;
 public class LeastSquaresTest {
 
 	private LeastSquares underTest;
-	private PriorityQueue<UsageStatistics> statsQueue;
+	private List<UsageStatistics> statsQueue;
 	
 	@Before
 	public void setUp(){
 		underTest=LeastSquares.getInstance();
-		statsQueue=new PriorityQueue<UsageStatistics>();
+		statsQueue=new ArrayList<UsageStatistics>();
 		Calendar cal = Calendar.getInstance();
-		cal.set(2009, Calendar.DECEMBER, 7);
-		statsQueue.add(new UsageStatistics(cal.getTime(),8));
+		cal.set(2009, Calendar.DECEMBER, 1);
+		statsQueue.add(new UsageStatistics(cal.getTime(),2));
+		cal.set(2009, Calendar.DECEMBER, 2);
+		statsQueue.add(new UsageStatistics(cal.getTime(),3));
 		cal.set(2009, Calendar.DECEMBER, 3);
 		statsQueue.add(new UsageStatistics(cal.getTime(),4));
 		cal.set(2009, Calendar.DECEMBER, 4);
 		statsQueue.add(new UsageStatistics(cal.getTime(),5));
-		cal.set(2009, Calendar.DECEMBER, 6);
-		statsQueue.add(new UsageStatistics(cal.getTime(),7));
 		cal.set(2009, Calendar.DECEMBER, 5);
 		statsQueue.add(new UsageStatistics(cal.getTime(),6));
-		cal.set(2009, Calendar.DECEMBER, 1);
-		statsQueue.add(new UsageStatistics(cal.getTime(),2));
-		cal.set(2009, Calendar.DECEMBER, 10);
-		statsQueue.add(new UsageStatistics(cal.getTime(),11));
+		cal.set(2009, Calendar.DECEMBER, 6);
+		statsQueue.add(new UsageStatistics(cal.getTime(),7));
+		cal.set(2009, Calendar.DECEMBER, 7);
+		statsQueue.add(new UsageStatistics(cal.getTime(),8));
 		cal.set(2009, Calendar.DECEMBER, 8);
 		statsQueue.add(new UsageStatistics(cal.getTime(),9));
 		cal.set(2009, Calendar.DECEMBER, 9);
 		statsQueue.add(new UsageStatistics(cal.getTime(),10));
-		cal.set(2009, Calendar.DECEMBER, 2);
-		statsQueue.add(new UsageStatistics(cal.getTime(),3));
+		cal.set(2009, Calendar.DECEMBER, 10);
+		statsQueue.add(new UsageStatistics(cal.getTime(),11));
 		
 		//2,3,4,5,6,7,8,9,10,11
 	}

@@ -8,7 +8,8 @@ import com.acme.challenge.model.manager.MachineManager;
 public class UrlQueueScalingStrategy extends ScalingStrategy {
 
 	private static final int MINIMUM_MACHINE_COUNT = 5;
-	private Integer END_OF_HOUR = 20;
+	// average url job time * 2
+	private Integer EARLIEST_TERMINATION = 2;
 
 	private UrlQueueScalingStrategy() {
 		super(MachineManager.getInstance());
@@ -23,13 +24,6 @@ public class UrlQueueScalingStrategy extends ScalingStrategy {
 	}
 
 	@Override
-	protected boolean isInTerminateTime(long diff) {
-		boolean isTerminated = false;
-		isTerminated = (diff < END_OF_HOUR);
-		return isTerminated;
-	}
-
-	@Override
 	protected int getNrOfLaunchedVMs() {
 		return machineManager.nrOfActiveUrlMachines();
 	}
@@ -41,7 +35,7 @@ public class UrlQueueScalingStrategy extends ScalingStrategy {
 
 	@Override
 	protected void nominateToTermination(Date date, int maxNrToTerminate) {
-		machineManager.terminateUrlMachinesNearBillingTime(date, END_OF_HOUR, maxNrToTerminate);
+		machineManager.terminateUrlMachinesNearBillingTime(date, EARLIEST_TERMINATION, maxNrToTerminate);
 	}
 
 	public static final double[] MAX_USAGE = { 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,

@@ -4,11 +4,12 @@ import static com.acme.challenge.Helper.addDate;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
-import com.acme.challenge.TmpFileWriter;
 import com.acme.challenge.base.UsageStatistics;
 import com.acme.challenge.forecast.LeastSquares;
 import com.acme.challenge.model.manager.MachineManager;
@@ -23,7 +24,7 @@ public abstract class ScalingStrategy {
 		this.machineManager = machineManager;
 	}
 
-	public void processStatisticsQueueVersion0(Date now, PriorityQueue<UsageStatistics> statsQueue) {
+	public void processStatisticsQueueVersion0(Date now, List<UsageStatistics> statsQueue) {
 		int max = 0;
 		for (UsageStatistics stat : statsQueue) {
 			if (stat.getUsedVMs() > max) {
@@ -46,7 +47,7 @@ public abstract class ScalingStrategy {
 		}
 	}
 
-	public void processStatisticsQueueVersion1(Date now, PriorityQueue<UsageStatistics> statsQueue) {
+	public void processStatisticsQueueVersion1(Date now, List<UsageStatistics> statsQueue) {
 		if (statsQueue.size() == VirtualLoadSimulator.MAX_QUEUE_SIZE) {
 			SimpleRegression regression = leastSquares.createRegression(statsQueue);
 			double forecast = leastSquares.getForecast(regression, statsQueue.size() + getActualForecastDistance(now));
@@ -58,9 +59,20 @@ public abstract class ScalingStrategy {
 					launchVM(now);
 				}
 			}
-			if (Math.ceil(getNrOfLaunchedVMs() * getActualMinUsage(now)) >= forecast && getNrOfLaunchedVMs() > minimumMachineCount()) {
+			if (Math.ceil(getNrOfLaunchedVMs() * getActualMinUsage(now)) > forecast && getNrOfLaunchedVMs() > minimumMachineCount()) {
 				VMsNeeded = Math.max((int) Math.ceil((double) forecast / getActualMaxUsage(now)), minimumMachineCount());
-				int maxNrOfVMsToTerminate = getNrOfLaunchedVMs() - VMsNeeded;
+
+				//int maxNrOfVMsToTerminate = getNrOfLaunchedVMs() - VMsNeeded;
+								
+				Random random = new Random();
+				double rnd = random.nextDouble();
+				
+				int maxNrOfVMsToTerminate;
+				if (rnd>0.8){
+					maxNrOfVMsToTerminate = 1;
+				} else {
+					maxNrOfVMsToTerminate = 0;
+				}
 				nominateToTermination(now, maxNrOfVMsToTerminate);
 			}
 			logForecast(now, getNrOfLaunchedVMs());
@@ -92,7 +104,5 @@ public abstract class ScalingStrategy {
 	protected abstract void launchVM(Date date);
 
 	protected abstract void nominateToTermination(Date date, int maxNrToTerminate);
-
-	protected abstract boolean isInTerminateTime(long diff);
 
 }

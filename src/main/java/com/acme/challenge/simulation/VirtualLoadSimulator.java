@@ -4,6 +4,7 @@ import static com.acme.challenge.Helper.addDate;
 import static com.acme.challenge.Helper.max;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -125,16 +126,34 @@ public class VirtualLoadSimulator {
 		return ret;
 	}
 
-	public PriorityQueue<UsageStatistics> getUrlStatsQueue() {
-		return urlStatsQueue;
+	public List<UsageStatistics> getUrlStatsQueueSorted() {
+		return getSortedCollection(urlStatsQueue);
+	}
+	
+	public List<UsageStatistics> getLastNOfUrlStatsQueueSorted(int n) {
+		return getSortedCollection(urlStatsQueue).subList(urlStatsQueue.size()-n, urlStatsQueue.size());
 	}
 
-	public PriorityQueue<UsageStatistics> getExportStatsQueue() {
-		return exportStatsQueue;
+	public List<UsageStatistics> getExportStatsQueueSorted() {
+		return getSortedCollection(exportStatsQueue);
+	}
+	
+	public List<UsageStatistics> getLastNOfExportStatsQueueSorted(int n) {
+		return getSortedCollection(exportStatsQueue).subList(exportStatsQueue.size()-n, exportStatsQueue.size());
 	}
 
-	public PriorityQueue<UsageStatistics> getGeneralStatsQueue() {
-		return generalStatsQueue;
+	public List<UsageStatistics> getGeneralStatsQueueSorted() {
+		return getSortedCollection(generalStatsQueue);
+	}
+	
+	public List<UsageStatistics> getLastNOfGeneralStatsQueueSorted(int n) {
+		return getSortedCollection(generalStatsQueue).subList(generalStatsQueue.size()-n, generalStatsQueue.size());
+	}
+	
+	public List<UsageStatistics> getSortedCollection(PriorityQueue<UsageStatistics> statsQueue) {
+		List<UsageStatistics> statsList = new ArrayList<UsageStatistics>(statsQueue);
+		Collections.sort(statsList);
+		return statsList;
 	}
 
 	public void updateStatistics(Date now) {
@@ -142,5 +161,8 @@ public class VirtualLoadSimulator {
 		updateStatisticsQueue(now, QueueType.GENERAL);
 		updateStatisticsQueue(now, QueueType.EXPORT);
 	}
-
+	
+	public void setUrlStatsQueue(PriorityQueue<UsageStatistics> urlStatsQueue) {
+		this.urlStatsQueue = urlStatsQueue;
+	}
 }
