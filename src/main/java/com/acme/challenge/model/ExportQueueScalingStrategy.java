@@ -7,7 +7,8 @@ import com.acme.challenge.model.manager.MachineManager;
 public class ExportQueueScalingStrategy extends ScalingStrategy {
 
 	private static final int MINIMUM_MACHINE_COUNT = 5;
-	private Integer END_OF_HOUR = 30;
+	//average export job time
+	private Integer EARLIEST_TERMINATION = 18;
 
 	private ExportQueueScalingStrategy() {
 		super(MachineManager.getInstance());
@@ -22,13 +23,6 @@ public class ExportQueueScalingStrategy extends ScalingStrategy {
 	}
 
 	@Override
-	protected boolean isInTerminateTime(long diff) {
-		boolean isTerminated = false;
-		isTerminated = (diff < END_OF_HOUR);
-		return isTerminated;
-	}
-
-	@Override
 	protected int getNrOfLaunchedVMs() {
 		return machineManager.nrOfActiveExportMachines();
 	}
@@ -40,7 +34,7 @@ public class ExportQueueScalingStrategy extends ScalingStrategy {
 
 	@Override
 	protected void nominateToTermination(Date date, int maxNrToTerminate) {
-		machineManager.terminateExportMachinesNearBillingTime(date, END_OF_HOUR, maxNrToTerminate);
+		machineManager.terminateExportMachinesNearBillingTime(date, EARLIEST_TERMINATION, maxNrToTerminate);
 	}
 
 	public static final double[] MAX_USAGE = { 3.25, 3.0, 3.33, 3.25, 3.0, 2.58, 4.0, 3.0, 3.67, 5.78, 5.33, 3.25, 3.88, 2.75, 3.27, 3.33, 2.67, 2.57, 2.50, 2.78, 2.80, 2.89,

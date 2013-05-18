@@ -8,7 +8,8 @@ import com.acme.challenge.model.manager.MachineManager;
 public class GeneralQueueScalingStrategy extends ScalingStrategy {
 
 	private static final int MINIMUM_MACHINE_COUNT = 5;
-	private Integer END_OF_HOUR = 30;
+	// average general job time
+	private Integer EARLIEST_TERMINATION = 30;
 
 	private GeneralQueueScalingStrategy() {
 		super(MachineManager.getInstance());
@@ -22,12 +23,6 @@ public class GeneralQueueScalingStrategy extends ScalingStrategy {
 		return GeneralMachineStrategyHolder.INSTANCE;
 	}
 
-	@Override
-	protected boolean isInTerminateTime(long diff) {
-		boolean isTerminated = false;
-		isTerminated = (diff < END_OF_HOUR);
-		return isTerminated;
-	}
 
 	@Override
 	protected int getNrOfLaunchedVMs() {
@@ -41,7 +36,7 @@ public class GeneralQueueScalingStrategy extends ScalingStrategy {
 
 	@Override
 	protected void nominateToTermination(Date date, int maxNrToTerminate) {
-		machineManager.terminateGeneralMachinesNearBillingTime(date, END_OF_HOUR, maxNrToTerminate);
+		machineManager.terminateGeneralMachinesNearBillingTime(date, EARLIEST_TERMINATION, maxNrToTerminate);
 	}
 
 	public static final double[] MAX_USAGE = { 3.22, 2.86, 2.86, 2.57, 3.0, 3.57, 3.18, 3.0, 4.0, 3.0, 3.0, 3.4, 3.0, 3.14, 2.75, 2.78, 2.4, 2.18, 2.48, 2.67, 2.56, 2.2,
