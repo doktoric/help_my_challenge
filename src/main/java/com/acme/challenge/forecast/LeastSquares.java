@@ -22,13 +22,10 @@ public class LeastSquares {
 		return LeastSquaresHolder.INSTANCE;
 	}
 
-	public SimpleRegression createRegression(PriorityQueue<UsageStatistics> statsQueue) {
+	public SimpleRegression createRegression(List<UsageStatistics> statsQueue) {
 		SimpleRegression regression = new SimpleRegression();
-		List<UsageStatistics> statsList = getSortedCollection(statsQueue);
 		int i = 0;
-		for (UsageStatistics usageStatistics : statsList) {
-			// System.out.println("added data: " + i + " " +
-			// usageStatistics.getUsedVMs());
+		for (UsageStatistics usageStatistics : statsQueue) {
 			regression.addData(i, usageStatistics.getUsedVMs());
 			i++;
 		}
@@ -57,11 +54,5 @@ public class LeastSquares {
 
 	public double getSlopeStdError(SimpleRegression regression) {
 		return regression.getSlopeStdErr();
-	}
-
-	private List<UsageStatistics> getSortedCollection(PriorityQueue<UsageStatistics> statsQueue1) {
-		List<UsageStatistics> statsList = new ArrayList<UsageStatistics>(statsQueue1);
-		Collections.sort(statsList);
-		return statsList;
 	}
 }

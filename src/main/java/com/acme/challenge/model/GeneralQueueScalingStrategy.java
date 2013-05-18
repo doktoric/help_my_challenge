@@ -78,4 +78,9 @@ public class GeneralQueueScalingStrategy extends ScalingStrategy {
 		TmpFileWriter.getInstance().writeline(String.valueOf(forecast));
 		
 	}
+	
+	@Override
+	protected double getChanceOfTermination() {
+		return 0.1;
+	}
 }

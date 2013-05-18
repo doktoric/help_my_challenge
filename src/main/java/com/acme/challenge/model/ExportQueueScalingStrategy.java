@@ -76,4 +76,9 @@ public class ExportQueueScalingStrategy extends ScalingStrategy {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected double getChanceOfTermination() {
+		return 0.15;
+	}
 }

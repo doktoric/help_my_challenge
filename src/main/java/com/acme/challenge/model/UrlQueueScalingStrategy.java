@@ -80,4 +80,9 @@ public class UrlQueueScalingStrategy extends ScalingStrategy {
 //		TmpFileWriter.getInstance().writeline(String.valueOf(forecast));
 		
 	}
+	
+	@Override
+	protected double getChanceOfTermination() {
+		return 0.7;
+	}
 }

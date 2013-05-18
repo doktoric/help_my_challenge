@@ -51,29 +51,35 @@ public abstract class ScalingStrategy {
 		if (statsQueue.size() == VirtualLoadSimulator.MAX_QUEUE_SIZE) {
 			SimpleRegression regression = leastSquares.createRegression(statsQueue);
 			double forecast = leastSquares.getForecast(regression, statsQueue.size() + getActualForecastDistance(now));
-
-			int VMsNeeded;
-			if (Math.ceil(getNrOfLaunchedVMs() * getActualMaxUsage(now)) <= forecast) {
-				VMsNeeded = (int) Math.ceil((double) forecast / getActualMaxUsage(now));
+			
+			// tells if we need upscale or downscale
+			double slope = leastSquares.getSlope(regression);
+			
+			//upscale
+			if (slope > 0) {
+				//we predict the number of VMs needed 2 minutes from now based on the simulation statistics
+				//we want to have idle VMs because of the variance, so this prediction is multiplied by a statistically stated value
+				int VMsNeeded = (int) Math.ceil((double) forecast * getActualMaxUsage(now));
 				for (int i = 0; i < VMsNeeded - getNrOfLaunchedVMs(); i++) {
 					launchVM(now);
 				}
 			}
-			if (Math.ceil(getNrOfLaunchedVMs() * getActualMinUsage(now)) > forecast && getNrOfLaunchedVMs() > minimumMachineCount()) {
-				VMsNeeded = Math.max((int) Math.ceil((double) forecast / getActualMaxUsage(now)), minimumMachineCount());
-
-				//int maxNrOfVMsToTerminate = getNrOfLaunchedVMs() - VMsNeeded;
-								
-				Random random = new Random();
-				double rnd = random.nextDouble();
-				
-				int maxNrOfVMsToTerminate;
-				if (rnd>0.8){
-					maxNrOfVMsToTerminate = 1;
-				} else {
-					maxNrOfVMsToTerminate = 0;
+			//downscale
+			if (slope < 0 && getNrOfLaunchedVMs() > minimumMachineCount()) {
+				//it is possible that the slope is negative, but we don't need upscale because it's degree is not high enough
+				int VMsNeeded = Math.max((int) Math.ceil((double) forecast * getActualMaxUsage(now)), minimumMachineCount());
+				if (getNrOfLaunchedVMs() > VMsNeeded){
+					// terminate max 1 machine per second
+					Random random = new Random();
+					double rnd = random.nextDouble();
+					int maxNrOfVMsToTerminate;
+					if (rnd < getChanceOfTermination()) {
+						maxNrOfVMsToTerminate = 1;
+					} else {
+						maxNrOfVMsToTerminate = 0;
+					}
+					nominateToTermination(now, maxNrOfVMsToTerminate);
 				}
-				nominateToTermination(now, maxNrOfVMsToTerminate);
 			}
 			logForecast(now, getNrOfLaunchedVMs());
 		} else {
@@ -104,5 +110,7 @@ public abstract class ScalingStrategy {
 	protected abstract void launchVM(Date date);
 
 	protected abstract void nominateToTermination(Date date, int maxNrToTerminate);
+
+	protected abstract double getChanceOfTermination();
 
 }
