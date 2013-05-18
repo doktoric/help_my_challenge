@@ -1,5 +1,6 @@
 package com.acme.challenge.model;
 
+import static com.acme.challenge.App.MAX_QUEUE_SIZE;
 import static com.acme.challenge.Helper.addDate;
 
 import java.util.Calendar;
@@ -48,7 +49,7 @@ public abstract class ScalingStrategy {
 	}
 
 	public void processStatisticsQueueVersion1(Date now, List<UsageStatistics> statsQueue) {
-		if (statsQueue.size() == VirtualLoadSimulator.MAX_QUEUE_SIZE) {
+		if (statsQueue.size() == MAX_QUEUE_SIZE) {
 			SimpleRegression regression = leastSquares.createRegression(statsQueue);
 			double forecast = leastSquares.getForecast(regression, statsQueue.size() + getActualForecastDistance(now));
 			

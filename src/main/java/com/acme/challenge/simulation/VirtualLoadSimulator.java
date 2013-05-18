@@ -1,5 +1,6 @@
 package com.acme.challenge.simulation;
 
+import static com.acme.challenge.App.MAX_QUEUE_SIZE;
 import static com.acme.challenge.Helper.addDate;
 import static com.acme.challenge.Helper.max;
 
@@ -16,7 +17,7 @@ import com.acme.challenge.base.UsageStatistics;
 
 public class VirtualLoadSimulator {
 
-	public static final int MAX_QUEUE_SIZE = 300;
+	
 
 	private VirtualLoadSimulator() {
 	}

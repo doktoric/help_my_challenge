@@ -20,7 +20,7 @@ private TmpFileWriter(){}
 	
 	public void initFile() {  
 		try {
-			writer = new PrintWriter("e://downloads//tmpForecast.txt", "UTF-8");
+			writer = new PrintWriter("tmpForecast.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
