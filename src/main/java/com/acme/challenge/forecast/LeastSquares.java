@@ -55,4 +55,6 @@ public class LeastSquares {
 	public double getSlopeStdError(SimpleRegression regression) {
 		return regression.getSlopeStdErr();
 	}
+
 }
+

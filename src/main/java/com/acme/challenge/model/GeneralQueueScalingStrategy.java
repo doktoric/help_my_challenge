@@ -39,8 +39,8 @@ public class GeneralQueueScalingStrategy extends ScalingStrategy {
 		machineManager.terminateGeneralMachinesNearBillingTime(date, EARLIEST_TERMINATION, maxNrToTerminate);
 	}
 
-	public static final double[] MAX_USAGE = { 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
-			0.6, 0.6 };
+	public static final double[] MAX_USAGE = { 3.22, 2.86, 2.86, 2.57, 3.0, 3.57, 3.18, 3.0, 4.0, 3.0, 3.0, 3.4, 3.0, 3.14, 2.75, 2.78, 2.4, 2.18, 2.48, 2.67, 2.56, 2.2,
+			2.5, 2.73 };
 	public static final double[] MIN_USAGE = { 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4,
 			0.4, 0.4 };
 	public static final int[] FORECAST_DISTANCE = { 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120,

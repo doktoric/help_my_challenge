@@ -37,8 +37,8 @@ public class ExportQueueScalingStrategy extends ScalingStrategy {
 		machineManager.terminateExportMachinesNearBillingTime(date, EARLIEST_TERMINATION, maxNrToTerminate);
 	}
 
-	public static final double[] MAX_USAGE = { 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
-			0.6, 0.6 };
+	public static final double[] MAX_USAGE = { 3.25, 3.0, 3.33, 3.25, 3.0, 2.58, 4.0, 3.0, 3.67, 5.78, 5.33, 3.25, 3.88, 2.75, 3.27, 3.33, 2.67, 2.57, 2.50, 2.78, 2.80, 2.89,
+			2.6, 3.0 };
 	public static final double[] MIN_USAGE = { 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4,
 			0.4, 0.4 };
 	public static final int[] FORECAST_DISTANCE = { 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120,
