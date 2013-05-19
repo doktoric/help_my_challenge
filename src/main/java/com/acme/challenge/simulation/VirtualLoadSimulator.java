@@ -1,6 +1,5 @@
 package com.acme.challenge.simulation;
 
-import static com.acme.challenge.App.MAX_QUEUE_SIZE;
 import static com.acme.challenge.Helper.addDate;
 import static com.acme.challenge.Helper.max;
 
@@ -17,7 +16,9 @@ import com.acme.challenge.base.UsageStatistics;
 
 public class VirtualLoadSimulator {
 
-	
+	public static int URL_MAX_QUEUE_SIZE = 300;
+	public static int GENERAL_MAX_QUEUE_SIZE = 300;
+	public static int EXPORT_MAX_QUEUE_SIZE = 300;
 
 	private VirtualLoadSimulator() {
 	}
@@ -39,27 +40,27 @@ public class VirtualLoadSimulator {
 	private PriorityQueue<UsageStatistics> exportStatsQueue = new PriorityQueue<>();
 
 	public void updateStatisticsQueue(Date now, QueueType queueType) {
-		PriorityQueue<UsageStatistics> statsQueue = null;
-		List<SimulatedMachine> simulatedMachines = null;
 		switch (queueType) {
 		case URL:
-			statsQueue = urlStatsQueue;
-			simulatedMachines = urlQMachines;
+			urlStatsQueue.add(new UsageStatistics(now, getBusyMachines(now, urlQMachines)));
+			if (urlStatsQueue.size() > URL_MAX_QUEUE_SIZE) {
+				urlStatsQueue.poll();
+			}
 			break;
 		case GENERAL:
-			statsQueue = generalStatsQueue;
-			simulatedMachines = generalQMachines;
+			generalStatsQueue.add(new UsageStatistics(now, getBusyMachines(now, generalQMachines)));
+			if (generalStatsQueue.size() > GENERAL_MAX_QUEUE_SIZE) {
+				generalStatsQueue.poll();
+			}
 			break;
 		case EXPORT:
-			statsQueue = exportStatsQueue;
-			simulatedMachines = exportQMachines;
+			exportStatsQueue.add(new UsageStatistics(now, getBusyMachines(now, exportQMachines)));
+			if (exportStatsQueue.size() > EXPORT_MAX_QUEUE_SIZE) {
+				exportStatsQueue.poll();
+			}
 			break;
 		default:
 			break;
-		}
-		statsQueue.add(new UsageStatistics(now, getBusyMachines(now, simulatedMachines)));
-		if (statsQueue.size() > MAX_QUEUE_SIZE) {
-			statsQueue.poll();
 		}
 	}
 

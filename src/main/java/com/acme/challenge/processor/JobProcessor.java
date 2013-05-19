@@ -1,5 +1,7 @@
 package com.acme.challenge.processor;
-import static com.acme.challenge.App.MAX_QUEUE_SIZE; 
+import static com.acme.challenge.simulation.VirtualLoadSimulator.URL_MAX_QUEUE_SIZE;
+import static com.acme.challenge.simulation.VirtualLoadSimulator.EXPORT_MAX_QUEUE_SIZE;
+import static com.acme.challenge.simulation.VirtualLoadSimulator.GENERAL_MAX_QUEUE_SIZE;
 import java.util.Date;
 
 import com.acme.challenge.OutputWriter;
@@ -65,7 +67,9 @@ public class JobProcessor {
 	}
 
 	private void processStatistics(VirtualLoadSimulator simulatedMachineManager) {
-		if (simulatedMachineManager.getUrlStatsQueueSorted().size() == MAX_QUEUE_SIZE) {
+		if (simulatedMachineManager.getUrlStatsQueueSorted().size() == URL_MAX_QUEUE_SIZE &&
+				simulatedMachineManager.getGeneralStatsQueueSorted().size() == GENERAL_MAX_QUEUE_SIZE &&
+				simulatedMachineManager.getExportStatsQueueSorted().size() == EXPORT_MAX_QUEUE_SIZE) {
 			urlMachineStrategy.processStatisticsQueueVersion1(currentSecond, simulatedMachineManager.getUrlStatsQueueSorted());
 			generalMachineStrategy.processStatisticsQueueVersion1(currentSecond, simulatedMachineManager.getGeneralStatsQueueSorted());
 			exportMachineStrategy.processStatisticsQueueVersion1(currentSecond, simulatedMachineManager.getExportStatsQueueSorted()	);

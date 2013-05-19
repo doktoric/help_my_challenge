@@ -75,7 +75,7 @@ public class GeneralQueueScalingStrategy extends ScalingStrategy {
 
 	@Override
 	public void logForecast(Date date, double forecast) {
-		TmpFileWriter.getInstance().writeline(String.valueOf(forecast));
+		TmpFileWriter.getInstance().writeline(date + "  " + String.valueOf(forecast));
 		
 	}
 	

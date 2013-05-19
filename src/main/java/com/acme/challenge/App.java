@@ -1,13 +1,13 @@
 package com.acme.challenge;
 
+import com.acme.challenge.simulation.VirtualLoadSimulator;
+
 
 /**
  * 
  */
 public class App {
 
-	public static int MAX_QUEUE_SIZE = 300;
-	
 	public static void main(String[] args) {
 		String path="e:\\downloads\\week_1.log";
 		if (args.length > 0) {
@@ -15,10 +15,12 @@ public class App {
 		   {
 			   path=args[0];
 		   }
-		   else if(args.length==2)
+		   else if(args.length==4)
 		   {
 			   path=args[0];
-			   MAX_QUEUE_SIZE=Integer.parseInt(args[1]);
+			   VirtualLoadSimulator.URL_MAX_QUEUE_SIZE=Integer.parseInt(args[1]);
+			   VirtualLoadSimulator.GENERAL_MAX_QUEUE_SIZE=Integer.parseInt(args[2]);
+			   VirtualLoadSimulator.EXPORT_MAX_QUEUE_SIZE=Integer.parseInt(args[3]);
 		   }
 		}
 		
