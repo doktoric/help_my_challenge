@@ -18,7 +18,7 @@ public class VirtualLoadSimulator {
 
 	public static int URL_MAX_QUEUE_SIZE = 350;
 	public static int GENERAL_MAX_QUEUE_SIZE = 350;
-	public static int EXPORT_MAX_QUEUE_SIZE = 500;
+	public static int EXPORT_MAX_QUEUE_SIZE = 450;
 
 	private VirtualLoadSimulator() {
 	}
