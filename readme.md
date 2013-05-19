@@ -28,3 +28,6 @@ Brief summary of the solution:
 5. Launching time of new machines are logged, so it can be decided if it is worth making a termination. A machine is terminated only if it's near its billing time. This termination timeframe is based on the average job length of a queue.
 
 6. Extreme peaks that take just a few seconds cannot be predicted but needs to be handled. These peaks can be very extreme sometimes, so it is necessary to have much more VMs launched than the prediction in every moment. These rates are determined hourly and are computed from the simulations of the 2 weeks. These computations can be found in [this repo](https://github.com/doktoric/help-my-challenge-excel-exporter)
+
+______________
+solution created by @martonsereg and @doktoric
