@@ -16,9 +16,9 @@ import com.acme.challenge.base.UsageStatistics;
 
 public class VirtualLoadSimulator {
 
-	public static int URL_MAX_QUEUE_SIZE = 300;
-	public static int GENERAL_MAX_QUEUE_SIZE = 300;
-	public static int EXPORT_MAX_QUEUE_SIZE = 300;
+	public static int URL_MAX_QUEUE_SIZE = 350;
+	public static int GENERAL_MAX_QUEUE_SIZE = 350;
+	public static int EXPORT_MAX_QUEUE_SIZE = 500;
 
 	private VirtualLoadSimulator() {
 	}

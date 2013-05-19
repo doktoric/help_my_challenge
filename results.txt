@@ -1,0 +1,191 @@
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+d:\projects\help_my_challenge>test.bat
+
+d:\projects\help_my_challenge>set PYTHON_ENV=c:\Python27\python.exe
+
+d:\projects\help_my_challenge>javac -classpath .;lib/commons-math3-3.2.jar -d ta
+rget/classes -sourcepath src/main/java src/main/java/com/acme/challenge/App.java
+
+
+d:\projects\help_my_challenge>echo 300 300 300
+300 300 300
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 300 300 300   | c:\Python27\python.exe evaluat
+or.py
+29306
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 300 300 300   | c:\Python27\python.exe evaluat
+or.py
+22000
+
+d:\projects\help_my_challenge>echo 300 300 400
+300 300 400
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 300 300 400   | c:\Python27\python.exe evaluat
+or.py
+26332
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 300 300 400   | c:\Python27\python.exe evaluat
+or.py
+21732
+
+d:\projects\help_my_challenge>echo 300 400 300
+300 400 300
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 300 400 300   | c:\Python27\python.exe evaluat
+or.py
+27289
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 300 400 300   | c:\Python27\python.exe evaluat
+or.py
+21850
+
+d:\projects\help_my_challenge>echo 300 400 400
+300 400 400
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 300 400 400   | c:\Python27\python.exe evaluat
+or.py
+-1
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 300 400 400   | c:\Python27\python.exe evaluat
+or.py
+20846
+
+d:\projects\help_my_challenge>echo 400 300 400
+400 300 400
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 400 300 400   | c:\Python27\python.exe evaluat
+or.py
+-1
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 400 300 400   | c:\Python27\python.exe evaluat
+or.py
+22080
+
+d:\projects\help_my_challenge>echo 400 400 300
+400 400 300
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 400 400 300   | c:\Python27\python.exe evaluat
+or.py
+26570
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 400 400 300   | c:\Python27\python.exe evaluat
+or.py
+-1
+
+d:\projects\help_my_challenge>test.bat
+
+d:\projects\help_my_challenge>set PYTHON_ENV=c:\Python27\python.exe
+
+d:\projects\help_my_challenge>javac -classpath .;lib/commons-math3-3.2.jar -d ta
+rget/classes -sourcepath src/main/java src/main/java/com/acme/challenge/App.java
+
+
+d:\projects\help_my_challenge>echo 400 400 400
+400 400 400
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 400 400 400   | c:\Python27\python.exe evaluat
+or.py
+24170
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 400 400 400   | c:\Python27\python.exe evaluat
+or.py
+-1
+
+d:\projects\help_my_challenge>echo 500 400 400
+500 400 400
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 500 400 400   | c:\Python27\python.exe evaluat
+or.py
+-1
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 500 400 400   | c:\Python27\python.exe evaluat
+or.py
+20542
+
+d:\projects\help_my_challenge>echo 400 500 400
+400 500 400
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 400 500 400   | c:\Python27\python.exe evaluat
+or.py
+-1
+
+
+
+
+
+
+
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+d:\projects\help_my_challenge>test.bat
+
+d:\projects\help_my_challenge>set PYTHON_ENV=c:\Python27\python.exe
+
+d:\projects\help_my_challenge>javac -classpath .;lib/commons-math3-3.2.jar -d ta
+rget/classes -sourcepath src/main/java src/main/java/com/acme/challenge/App.java
+
+
+d:\projects\help_my_challenge>echo 350 350 450
+350 350 450
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 350 350 450   | c:\Python27\python.exe evaluat
+or.py
+24432
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 350 350 450   | c:\Python27\python.exe evaluat
+or.py
+20745
+
+d:\projects\help_my_challenge>
+
+
+d:\projects\help_my_challenge>echo 350 350 500
+350 350 500
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_1.log 350 350 500   | c:\Python27\python.exe evaluat
+or.py
+23763
+
+d:\projects\help_my_challenge>java -cp target/classes;lib/commons-math3-3.2.jar
+com.acme.challenge.App week_2.log 350 350 500   | c:\Python27\python.exe evaluat
+or.py
+21118
+
+d:\projects\help_my_challenge>
+
+
+350 400 500 már -1 a week1re
+
+400 350 500 már -1 a week1re
+
+360 360 500 már -1 a week1re
+
+350 360 500 már -1 a week1re
+
+360 350 500 már -1 a week1re
