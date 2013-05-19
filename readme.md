@@ -9,6 +9,7 @@ Download the repository as a zip file, decompress it and compile it with the fol
 	javac -classpath .;lib/commons-math3-3.2.jar -d target/classes -sourcepath src/main/java src/main/java/com/acme/challenge/App.java
 
 After the source is compiled, it can be run and evaluated with the following command (path of the input log is given as a program argument):
+
 	java -cp target/classes;lib/commons-math3-3.2.jar com.acme.challenge.App {log-path} | evaluator.py
 
 
