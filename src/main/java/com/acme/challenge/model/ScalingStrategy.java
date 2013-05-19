@@ -81,7 +81,6 @@ public abstract class ScalingStrategy {
 				nominateToTermination(now, maxNrOfVMsToTerminate);
 			}
 		}
-		logForecast(now, getNrOfLaunchedVMs());
 	}
 
 	protected int getIndexToDate(Date date) {

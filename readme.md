@@ -1,3 +1,7 @@
+
+Solution for the Prezi Scale Contest
+====================================
+
 Compile:
 javac -classpath .;lib/commons-math3-3.2.jar -d target/classes -sourcepath src/main/java src/main/java/com/acme/challenge/App.java
 

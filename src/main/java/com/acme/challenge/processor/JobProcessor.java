@@ -38,7 +38,6 @@ public class JobProcessor {
 		if (firstJobToProcess()) {
 			launchInitialMachines(job);
 			currentSecond = job.getDateTime();
-			TmpFileWriter.getInstance().initFile();
 		}
 
 		simulatedMachineManager.simulateVMLoad(job);
