@@ -79,6 +79,6 @@ public class ExportQueueScalingStrategy extends ScalingStrategy {
 
 	@Override
 	protected double getChanceOfTermination() {
-		return 0.15;
+		return 0.4;
 	}
 }

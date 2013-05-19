@@ -82,6 +82,6 @@ public class UrlQueueScalingStrategy extends ScalingStrategy {
 	
 	@Override
 	protected double getChanceOfTermination() {
-		return 0.7;
+		return 0.8;
 	}
 }

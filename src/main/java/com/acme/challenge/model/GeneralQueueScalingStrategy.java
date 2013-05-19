@@ -81,6 +81,6 @@ public class GeneralQueueScalingStrategy extends ScalingStrategy {
 	
 	@Override
 	protected double getChanceOfTermination() {
-		return 0.1;
+		return 0.3;
 	}
 }
