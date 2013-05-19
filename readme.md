@@ -10,3 +10,8 @@ java -cp target/classes;lib/commons-math3-3.2.jar com.acme.challenge.App {log-pa
 300: queue size [optional]
 log-path: the logs that you want to check;)
 
+
+350 350 450 :
+	week1:24601
+	week2:20745
+
